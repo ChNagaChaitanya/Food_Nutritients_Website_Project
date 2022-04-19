@@ -1,0 +1,30 @@
+﻿@model List<DataGov_API_Intro_6.Models.Food_Item>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+
+@if (Model != null)
+{
+    //@Html.DisplayNameFor(model => model.)
+
+    <p style="color:red; font-size:18px">Please select to View Results</p>
+
+ //@foreach (var item in Model)
+                        //{
+                                    //@Html.DisplayFor(modelItem => item.description)
+        @foreach (var ite in Model[1].foodNutrients)
+        {
+            <p style="color:red; font-size:18px">Please select to View Nutrients</p>
+            @Html.DisplayFor(modelItem => ite.amount)
+            <p style="color:red; font-size:18px">Name</p>
+            
+            @Html.DisplayFor(modelItem => ite.nutrient.name)
+            
+
+}
+
+}
