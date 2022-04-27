@@ -294,14 +294,34 @@ namespace DataGov_API_Intro_6.Controllers
 
                     if (res1 != null)
                     {
-                        string[] nutrienttype = new string[] { "Protein", "Carbohydrate", "Fat", "Sugar", "Energy" };
+                        
                         float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
                         List<Food_Nutrient> fn = new List<Food_Nutrient>();
-                        for (int i = 0; i < nutrienttype.Length; i++)
+                        for (int i = 0; i < nutrientamt.Length; i++)
                         {
-                            fn[i].nutrient.name = nutrienttype[i];
-                            fn[i].amount = nutrientamt[i];
-                            fn[i].nutrient.nutrient_type = nutrienttype[i];
+                            
+                            string temp=res1.foodNutrients[i].nutrient.nutrient_type;
+
+                                switch (temp)
+                                        {
+                                            case "Protein":
+                                                fn[i].amount = prot;
+                                                break;
+                                            case "Carbohydrate":
+                                                fn[i].amount = carb;
+                                                break;
+                                            case "Fat":
+                                                fn[i].amount = fat;
+                                                break;
+                                            case "Sugar":
+                                                fn[i].amount = sugar;
+                                                break;
+                                            default:
+                                                fn[i].amount = energy;
+                                                break;
+                                        }
+                            
+                            
                         }
                         res1.foodNutrients=fn;
                         dbContext.SaveChanges();
