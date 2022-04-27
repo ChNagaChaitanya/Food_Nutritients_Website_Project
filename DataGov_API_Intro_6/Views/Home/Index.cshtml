@@ -17,16 +17,17 @@
                         {
                                    <p style="color:red; font-size:18px">Description</p>
                                    @Html.DisplayFor(modelItem => item.description)
-                                   <p style="color:red; font-size:18px">Nutrients</p>
+                                   <p style="color:red; font-size:18px">Nutrients : @Html.DisplayFor(modelItem => item.foodNutrients.Count)</p>
         @foreach (var ite in item.foodNutrients)
         {
             <p style="color:red; font-size:18px">Please select to View Nutrients</p>
             @Html.DisplayFor(modelItem => ite.amount)
             <p style="color:red; font-size:18px">Name</p>
-            @Html.DisplayFor(modelItem => ite.nutrient.number)
+            @Html.DisplayFor(modelItem => ite.nutrient.name)
             @Html.DisplayFor(modelItem => ite.nutrient.nutrient_type)
             
         }
+        <p style="color:red; font-size:18px">Nutrient values of item end here</p>
 }
 
 }

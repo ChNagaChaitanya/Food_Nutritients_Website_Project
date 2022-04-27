@@ -82,7 +82,7 @@ namespace DataGov_API_Intro_6.Controllers
                             {
                                 foodItem.description = item[i].description;
                                 foodItem.fdcId = Guid.NewGuid();
-                                foodItems.Add(foodItem);
+                                
                                 //int foodid = item[i].fdcId;
                                 if (dbContext.Food_Items.ToList().Count==0 || 
                                     ((dbContext.Food_Items.ToList().Count != 0) && (dbContext.Food_Items.ToList().Where(p => p.description == foodItem.description).ToList().Count == 0)))
@@ -177,9 +177,11 @@ namespace DataGov_API_Intro_6.Controllers
 
                                     }
                                 }
+                                nutrients = new List<Nutrient>();
+                                foodNutrients = new List<Food_Nutrient>();
+                                foodItem.foodNutrients = foodNutrients;
+                                foodItems.Add(foodItem);
 
-
-                                
                                 foodItem = new Food_Item();
                             }
                         }
