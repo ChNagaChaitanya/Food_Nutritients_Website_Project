@@ -6,19 +6,15 @@ namespace DataGov_API_Intro_6.Models
 {
 
 
-        public class FoodRoot
-        {
-            [Key]
-            public Guid id { get; set; }
-            public List<Food_Item> foodItems { get; set; }
-        }
+        
 
         public class Food_Item
         {
-            public Food_Item(string description)
+            public Food_Item(string description, List<Food_Nutrient> fn)
             {
             
                 this.description = description;
+                this.foodNutrients = fn;
             
             }
 
@@ -27,11 +23,12 @@ namespace DataGov_API_Intro_6.Models
             {
 
             }
-            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             [Key]
-            public int fdcId { get; set; }
+            public Guid fdcId { get; set; }
+            [Required]
             public string description { get; set; }
-
+            
             public List<Food_Nutrient> foodNutrients { get; set; }
 
             
@@ -39,25 +36,49 @@ namespace DataGov_API_Intro_6.Models
 
         public class Food_Nutrient
         {
-            [DatabaseGenerated(DatabaseGeneratedOption.None)]
-            [Key]
-            public int fdcId { get; set; }
-            [DatabaseGenerated(DatabaseGeneratedOption.None)]
-            [Key]
-            public int number { get; set; }
+            public Food_Nutrient(float amt, string type)
+            {
+            
+                this.nutrient.name = type;
+
+                this.nutrient.nutrient_type = type;
+                this.amount = amt;
+            
+            }
+
+            public Food_Nutrient()
+            {
+
+            }
+            //[DatabaseGenerated(DatabaseGeneratedOption.None)]
+            [Key, Column(Order = 1)]
+            public Guid fdcId { get; set; }
+            //[DatabaseGenerated(DatabaseGeneratedOption.None)]
+            [Key, Column(Order = 2)]
+            public Guid number { get; set; }
+            
+            [Required]
             public float amount { get; set; }
 
-            
+            [ForeignKey("fdcId")]
             public Food_Item food_item { get; set; }
+            [ForeignKey("number")]
             public Nutrient nutrient { get; set; }
 
         }
 
         public class Nutrient
         {
-            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+
+            public Nutrient()
+            {
+
+            }
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             [Key]
-            public int number { get; set; }
+            public Guid number { get; set; }
+
+            [Required]
             public string name { get; set; }
 
             public string unitName { get; set; }

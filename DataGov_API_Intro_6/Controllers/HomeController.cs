@@ -12,7 +12,7 @@ namespace DataGov_API_Intro_6.Controllers
     public class HomeController : Controller
     {
         HttpClient httpClient;
-        FoodRoot foodRoot = new FoodRoot();
+        //FoodRoot foodRoot = new FoodRoot();
 
         static string BASE_URL = "https://api.nal.usda.gov/fdc/v1";
         static string API_KEY = "aaXHJ2E5Mz6bPzI5rOs813sn7OW8U8N4Gz3BkT11"; //Add your API key here inside ""
@@ -39,6 +39,7 @@ namespace DataGov_API_Intro_6.Controllers
             string foodData = "";
 
             List<Food_Item> foodItems = new List<Food_Item>();
+            List<int> nutrientids = new List<int>();
             List<Nutrient> nutrients = new List<Nutrient>();
             List<Food_Nutrient> foodNutrients = new List<Food_Nutrient>();
             //Food_Item foodItem = null;
@@ -69,68 +70,135 @@ namespace DataGov_API_Intro_6.Controllers
                 if (!foodData.Equals(""))
                 {
                     // JsonConvert is part of the NewtonSoft.Json Nuget package
-                    foodItems = JsonConvert.DeserializeObject<List<Food_Item>>(foodData);
+                    //foodItems = JsonConvert.DeserializeObject<List<Food_Item>>(foodData);
                     
                     dynamic item = JsonConvert.DeserializeObject(foodData);
-                    if (!item.Equals("") && !foodItems.Equals("") && item.Count > 0)
+                    if (!item.Equals("") && item.Count > 0)
                     {
-
+                        //nutrientids = dbContext.Nutrients.Select(nutrient => nutrient.number).ToList();
                         for (int i = 0; i < item.Count; i++)
                         {
-                            if (dbContext.Food_Nutrients.Where(c => c.fdcId.Equals(food_Nutrient.fdcId)).Count() == 0)
+                            if (item[i].description != null)
                             {
-                                food_Nutrient.fdcId = foodItems[i].fdcId;
-                            }
-                            foreach (var x in item[i].foodNutrients)
-                            {
-                                int id = x.number;
-                                string name = x.name;
-                                string unitName = x.unitName;
-                                float amount = x.amount;
-                                if (dbContext.Nutrients.Where(c => c.number.Equals(nutrient.number)).Count() == 0)
+                                foodItem.description = item[i].description;
+                                foodItem.fdcId = Guid.NewGuid();
+                                foodItems.Add(foodItem);
+                                //int foodid = item[i].fdcId;
+                                if (dbContext.Food_Items.ToList().Count==0 || 
+                                    ((dbContext.Food_Items.ToList().Count != 0) && (dbContext.Food_Items.ToList().Where(p => p.description == foodItem.description).ToList().Count == 0)))
                                 {
-                                nutrient.number = id;
-                                nutrient.name = name;
-                                nutrient.unitName = unitName;
-                                nutrients.Add(nutrient);
-                                
-                                    dbContext.Nutrients.Add(nutrient);
+                                    dbContext.AddRange(foodItem);
+                                    await dbContext.SaveChangesAsync();
                                 }
-                                if (dbContext.Food_Nutrients.Where(c => c.fdcId.Equals(food_Nutrient.fdcId)).Count() == 0)
-                                {
-                                    food_Nutrient.number = id;
-                                
 
-                                food_Nutrient.nutrient = nutrient;
-                                food_Nutrient.nutrient.number = id;
-                                food_Nutrient.nutrient.name = name;
-                                food_Nutrient.nutrient.unitName = unitName;
-                                food_Nutrient.amount = amount;
-                                foodNutrients.Add(food_Nutrient);
-                                
-                                    dbContext.Food_Nutrients.Add(food_Nutrient);
+                                //food_Nutrient.fdcId = foodItem.fdcId;
+
+                                foreach (var x in item[i].foodNutrients)
+                                {
+                                    if (x.number == "203" || x.number == "205" || x.number == "204"
+                                        || x.number == "269" || x.number == "208")
+                                    {
+                                        int id = x.number;
+                                        string name = x.name;
+                                        string unitName = x.unitName;
+                                        float amount = x.amount;
+                                        switch (id)
+                                        {
+                                            case 203:
+                                                nutrient.nutrient_type = "Protein";
+                                                break;
+                                            case 205:
+                                                nutrient.nutrient_type = "Carbohydrate";
+                                                break;
+                                            case 204:
+                                                nutrient.nutrient_type = "Fat";
+                                                break;
+                                            case 269:
+                                                nutrient.nutrient_type = "Sugar";
+                                                break;
+                                            default:
+                                                nutrient.nutrient_type = "Energy";
+                                                break;
+                                        }
+
+
+                                        nutrient.number = Guid.NewGuid();
+                                        nutrient.name = name;
+                                        nutrient.unitName = unitName;
+                                        nutrients.Add(nutrient);
+
+                                        if (dbContext.Nutrients.ToList().Count == 0 ||
+                                    ((dbContext.Nutrients.ToList().Count != 0) && (dbContext.Nutrients.ToList().Where(p => p.name == nutrient.name).ToList().Count == 0)))
+                                        {
+                                            dbContext.Add(nutrient);
+                                            await dbContext.SaveChangesAsync();
+                                        }
+
+                                        //food_Nutrient.number = nutrient.number;
+
+
+
+                                        //food_Nutrient.nutrient = nutrient;
+                                        //food_Nutrient.nutrient.number = nutrient.number;
+                                        //food_Nutrient.nutrient.name = name;
+                                        //food_Nutrient.nutrient.unitName = unitName;
+                                        //food_Nutrient.amount = amount;
+                                        //foodNutrients.Add(food_Nutrient);
+                                        //dbContext.ChangeTracker.Clear();
+                                        //if (dbContext.Food_Nutrients.Where(c => c.fdcId.Equals(food_Nutrient.fdcId) &&
+                                        //c.number.Equals(nutrient.number)).Count() == 0)
+                                        //{
+                                        //dbContext.Food_Nutrients.Add(food_Nutrient);
+                                        //await dbContext.SaveChangesAsync();
+                                        //}
+
+
+                                        //if (foodItem.foodNutrients == null)
+                                        //{ foodItem.foodNutrients = new List<Food_Nutrient>();
+                                        //}
+                                        //foodItem.foodNutrients.Add(food_Nutrient);
+                                        //food_Nutrient = new Food_Nutrient();
+                                        //dbContext.Nutrients.Attach(nutrient);
+                                        food_Nutrient = new Food_Nutrient { amount = amount, food_item = foodItem, nutrient = nutrient };
+                                        foodNutrients.Add(food_Nutrient);
+
+                                        
+
+                                        if (dbContext.Food_Nutrients.ToList().Count == 0 ||
+                                    ((dbContext.Food_Nutrients.ToList().Count != 0) && (dbContext.Food_Nutrients.ToList().Where(p => p.nutrient.name == food_Nutrient.nutrient.name &&
+                                        p.food_item.description == food_Nutrient.food_item.description).ToList().Count == 0)))
+                                        {
+                                            dbContext.Add(food_Nutrient);
+                                            await dbContext.SaveChangesAsync();
+                                        }
+
+                                        nutrient = new Nutrient();
+                                        
+
+                                    }
                                 }
+
+
+                                
+                                foodItem = new Food_Item();
                             }
-                            if (dbContext.Food_Items.Where(c => c.fdcId.Equals(foodItems[i].fdcId)).Count() == 0)
-                            {
-                                foodItems[i].foodNutrients = (foodNutrients);
-                            }
-                            if (dbContext.Food_Items.Where(c => c.fdcId.Equals(foodItems[i].fdcId)).Count() == 0)
-                            {
-                                for (int j = 0; j < foodNutrients.Count; j++)
-                            {
-                                foodItems[i].foodNutrients[j].nutrient = foodNutrients[j].nutrient;
-                                foodItems[i].foodNutrients[j].nutrient.number = foodNutrients[j].nutrient.number;
-                                foodItems[i].foodNutrients[j].nutrient.name = foodNutrients[j].nutrient.name;
-                                foodItems[i].foodNutrients[j].nutrient.unitName = foodNutrients[j].nutrient.unitName;
-                            }
-                             dbContext.Food_Items.Add(foodItems[i]); }
                         }
-                        dbContext.SaveChangesAsync();
+                        
+
+
+
+                    }
+
+                 
+                    
+                    
+                   
+
+                    await dbContext.SaveChangesAsync();
                     }
                     
                     
-                }
+                
 
                 
                // await dbContext.SaveChangesAsync();
@@ -143,6 +211,143 @@ namespace DataGov_API_Intro_6.Controllers
 
             return View("Index",foodItems);
         }
+
+        //Create Record
+        public IActionResult CreateRecord(string food_name, float prot,
+                                              float carb, float fat, float sugar, float energy, string search)
+        {
+            try
+            {
+                
+                string[] nutrienttype = new string[] { "Protein", "Carbohydrate", "Fat", "Sugar", "Energy" };
+                float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
+                List<Food_Nutrient> fn = new List<Food_Nutrient>();
+                for (int i=0;i< nutrienttype.Length;i++)
+                {
+                    fn[i].nutrient.name = nutrienttype[i];
+                    fn[i].amount = nutrientamt[i];
+                    fn[i].nutrient.nutrient_type = nutrienttype[i];
+                }
+                if (food_name != null)
+                {
+                    Food_Item cr = new Food_Item(food_name, fn)
+                    {
+                        description = food_name,
+                        foodNutrients = fn
+                        
+                    };
+                    dbContext.Food_Items.Add(cr);
+                    dbContext.SaveChanges();
+                    ViewBag.Message = String.Format("Food Record Added ");
+                }
+                if (search != null)
+                {
+                    SearchRecord(search);
+                }
+            }
+            catch (Exception e)
+            {
+                // This is a useful place to insert a breakpoint and observe the error message.
+                Console.WriteLine(e.Message);
+            }
+            return View();
+        }
+
+
+
+        //READ
+        public IActionResult SearchRecord(string search)
+        {
+            try
+            {
+                
+
+                if (search != null)
+                {
+                    var res = dbContext.Food_Items.Where(x => x.description.ToString() == search.Trim())
+                        .Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
+                    
+                    List<Food_Nutrient> foodnutri = new List<Food_Nutrient>();
+                    //foodnutri.Add();
+                                        
+                    return View(res);
+
+                }
+            }
+            catch (Exception e)
+            {
+                // This is a useful place to insert a breakpoint and observe the error message.
+                Console.WriteLine(e.Message);
+            }
+            return View();
+        }
+
+        //UPDATE
+        public IActionResult UpdateRecords(string food_name, float prot,
+                                              float carb, float fat, float sugar, float energy)
+        {
+            try
+            {
+                if (food_name != null)
+                {
+                    var res1 = dbContext.Food_Items.Where(x => x.description == food_name).FirstOrDefault();
+
+                    if (res1 != null)
+                    {
+                        string[] nutrienttype = new string[] { "Protein", "Carbohydrate", "Fat", "Sugar", "Energy" };
+                        float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
+                        List<Food_Nutrient> fn = new List<Food_Nutrient>();
+                        for (int i = 0; i < nutrienttype.Length; i++)
+                        {
+                            fn[i].nutrient.name = nutrienttype[i];
+                            fn[i].amount = nutrientamt[i];
+                            fn[i].nutrient.nutrient_type = nutrienttype[i];
+                        }
+                        res1.foodNutrients=fn;
+                        dbContext.SaveChanges();
+                        ViewBag.Message = String.Format("Nutrient values Updated for the food item " + food_name);
+
+                    }
+                    return View(res1);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return View();
+        }
+
+        //DELETE
+        public IActionResult DeleteRecords(string food_name)
+        {
+            try
+            {
+                if (food_name != null)
+                {
+
+                    Food_Item cr3 = new Food_Item();
+                    cr3 = dbContext.Food_Items.Where(x => x.description == food_name).FirstOrDefault();
+                    if (cr3 != null)
+                    {
+                        dbContext.Food_Items.Remove(cr3);
+                        dbContext.SaveChanges();
+                        ViewBag.Message = String.Format("Food Item Record for "+ food_name +" is Deleted");
+
+                    }
+
+                    return View(cr3);
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return View();
+        }
+
     }
 }
 
