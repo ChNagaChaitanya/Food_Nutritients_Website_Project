@@ -223,12 +223,20 @@ namespace DataGov_API_Intro_6.Controllers
                 
                 string[] nutrienttype = new string[] { "Protein", "Carbohydrate", "Fat", "Sugar", "Energy" };
                 float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
+                string[] nutrientunit = new string[] { "G", "G", "G", "G", "KCAL" };
                 List<Food_Nutrient> fn = new List<Food_Nutrient>();
                 for (int i=0;i< nutrienttype.Length;i++)
                 {
-                    fn[i].nutrient.name = nutrienttype[i];
-                    fn[i].amount = nutrientamt[i];
-                    fn[i].nutrient.nutrient_type = nutrienttype[i];
+                    Nutrient nutrient = new Nutrient();
+                    nutrient.name = nutrienttype[i];
+                    nutrient.unitName = nutrientunit[i];
+                    nutrient.nutrient_type = nutrienttype[i];
+                    Food_Nutrient foodnut = new Food_Nutrient();
+                    foodnut.nutrient = nutrient;
+                    foodnut.amount = nutrientamt[i];
+
+                    fn.Add(foodnut);
+                    
                 }
                 if (food_name != null)
                 {
@@ -266,7 +274,7 @@ namespace DataGov_API_Intro_6.Controllers
 
                 if (search != null)
                 {
-                    var res = dbContext.Food_Items.Where(x => x.description.ToString() == search.Trim())
+                    var res = dbContext.Food_Items.Where(x => x.description.ToLower().ToString() == search.Trim().ToLower())
                         .Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
                     
                     List<Food_Nutrient> foodnutri = new List<Food_Nutrient>();

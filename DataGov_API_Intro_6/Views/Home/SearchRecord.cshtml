@@ -1,0 +1,223 @@
+﻿@model List<DataGov_API_Intro_6.Models.Food_Item>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nutrient Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+    <style>
+        body, html {
+            height: 100%
+        }
+
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Amatic SC", sans-serif
+        }
+
+        .menu {
+            display: none
+        }
+
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url("/w3images/pizza.jpg");
+            min-height: 90%;
+        }
+    </style>
+     @{
+    ViewData["Title"] = "SearchRecord";
+}
+
+@{
+    Layout = "";
+ }
+</head>
+<body id="myPage">
+    <!-- Navbar -->
+    <div class="top w3-xlarge">
+        <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
+            <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
+
+            <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
+            <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
+
+            <a href="aboutus.html" class="bar-item button hide-small hover-white">About Us</a>
+        </div>
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="bar-block theme-d2 hide hide-large hide-medium">
+            <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
+            <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
+            <a href="aboutus.html" class="bar-item button">About Us</a>
+        </div>
+    </div>
+    <!--Add the content here-->
+    <!--Nutrient Data container-->
+    <div class="row center w3-container w3-green w3-grayscale w3-padding-64 w3-xlarge" , id="menu">
+        <div class="w3-content">
+            <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Explore the Food - Nutrient Data</h1>
+            <div class="row">
+                <span style="float:left">
+                    <a asp-controller="Home" asp-action="CreateRecord" style="color: #171f4e;">Add Food Item</a>
+                </span>
+                <span style="float:right">
+                    <i class="fa fa-search"></i><input type="text" style="text-align:center" onkeyup="myFunction()" placeholder="Search for food">
+                </span>
+            </div>
+            <br>
+            <br>
+            <div class="">
+                <div class="row-padding">
+                    <div class="row" style="overflow-x:auto;">
+
+
+
+                        <p></p>
+                        <table class="table white" style="margin-left:auto;margin-right:auto;width:100%;" id="t_id">
+                            <tr style="border-bottom: 1px solid gray;border-top: 1px solid gray;word-break:break-all;">
+                                <th style="font-weight: bold;text-align:start;"> Food Description</th>
+
+                                <th style="font-weight: bold; text-align: start;"> Protiens(g)</th>
+                                <th style="font-weight: bold; text-align: start;"> Carbohydrates(g)</th>
+                                <th style="font-weight: bold; text-align: start;"> Fats(g)</th>
+                                <th style="font-weight: bold; text-align: start;"> Sugar(g)</th>
+                                <th style="font-weight: bold; text-align: start;"> Energy(kcal)</th>
+                                <th style="color: white;"></th>
+                                <th></th>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">Apple</td>
+
+                                <td id="r_prot">0.0</td>
+                                <td id="r_carb">14.3</td>
+                                <td id="r_fat">0.65</td>
+                                <td id="r_sug">10.4</td>
+                                <td id="r_eng">52.0</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">3 Musketeers Truffle Crisp Bar</td>
+
+                                <td id="r_prot">6.41</td>
+                                <td id="r_carb">28.8</td>
+                                <td id="r_fat">63.2</td>
+                                <td id="r_sug">57.7</td>
+                                <td id="r_eng">538</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">Acerola juice, raw</td>
+
+                                <td id="r_prot">0.4</td>
+                                <td id="r_carb">4.8</td>
+                                <td id="r_fat">0.3</td>
+                                <td id="r_sug">4.5</td>
+                                <td id="r_eng">23</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">Acerola, (west indian cherry), raw</td>
+
+                                <td id="r_prot">0.4</td>
+                                <td id="r_carb">7.69</td>
+                                <td id="r_fat">0.3</td>
+                                <td id="r_sug">0.0</td>
+                                <td id="r_eng">32</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">Acorn stew (Apache)</td>
+
+                                <td id="r_prot">6.81</td>
+                                <td id="r_carb">9.22</td>
+                                <td id="r_fat">3.47</td>
+                                <td id="r_sug">0.34</td>
+                                <td id="r_eng">32</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">Noodles</td>
+
+                                <td id="r_prot">11.1</td>
+                                <td id="r_carb">77.8</td>
+                                <td id="r_fat">1.85</td>
+                                <td id="r_sug">1.85</td>
+                                <td id="r_eng">370</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">Rice</td>
+
+                                <td id="r_prot">3.47</td>
+                                <td id="r_carb">26.4</td>
+                                <td id="r_fat">2.43</td>
+                                <td id="r_sug">1.39</td>
+                                <td id="r_eng">139</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                            <tr style="word-break:break-all;">
+                                <td id="r_food">ECLAIR ICECREAM BARS, CHOCOLATE</td>
+
+                                <td id="r_prot">2.74</td>
+                                <td id="r_carb">28.8</td>
+                                <td id="r_fat">13.7</td>
+                                <td id="r_sug">23.3</td>
+                                <td id="r_eng">247</td>
+                                <td></td>
+                                <td class="edit_row">
+                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <!-- Footer -->
+    <div class="bottom">
+        <footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
+
+            <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/" title="USF">USF</a> | <a href="privacypolicy.html" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
+        </footer>
+    </div>
+    <script src="js/script.js"></script>
+    <script src="js/Chart.min.js"></script>
+</body>
+
+</html>
