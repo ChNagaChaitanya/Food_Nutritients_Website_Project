@@ -224,6 +224,7 @@ namespace DataGov_API_Intro_6.Controllers
                 string[] nutrienttype = new string[] { "Protein", "Carbohydrate", "Fat", "Sugar", "Energy" };
                 float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
                 string[] nutrientunit = new string[] { "G", "G", "G", "G", "KCAL" };
+
                 List<Food_Nutrient> fn = new List<Food_Nutrient>();
                 for (int i=0;i< nutrienttype.Length;i++)
                 {
@@ -294,7 +295,7 @@ namespace DataGov_API_Intro_6.Controllers
 
         //UPDATE
         public IActionResult UpdateRecords(string food_name, float prot,
-                                              float carb, float fat, float sugar, float energy)
+                                            float carb, float fat, float sug, float eng)
         {
             try
             {
@@ -304,36 +305,36 @@ namespace DataGov_API_Intro_6.Controllers
 
                     if (res1 != null)
                     {
-                        
-                        float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
+
+                        float[] nutrientamt = new float[] { prot, carb, fat, sug, eng };
                         List<Food_Nutrient> fn = new List<Food_Nutrient>();
                         for (int i = 0; i < nutrientamt.Length; i++)
                         {
-                            
-                            string temp=res1.foodNutrients[i].nutrient.nutrient_type;
 
-                                switch (temp)
-                                        {
-                                            case "Protein":
-                                                fn[i].amount = prot;
-                                                break;
-                                            case "Carbohydrate":
-                                                fn[i].amount = carb;
-                                                break;
-                                            case "Fat":
-                                                fn[i].amount = fat;
-                                                break;
-                                            case "Sugar":
-                                                fn[i].amount = sugar;
-                                                break;
-                                            default:
-                                                fn[i].amount = energy;
-                                                break;
-                                        }
-                            
-                            
+                            string temp = res1.foodNutrients[i].nutrient.nutrient_type;
+
+                            switch (temp)
+                            {
+                                case "Protein":
+                                    fn[i].amount = prot;
+                                    break;
+                                case "Carbohydrate":
+                                    fn[i].amount = carb;
+                                    break;
+                                case "Fat":
+                                    fn[i].amount = fat;
+                                    break;
+                                case "Sugar":
+                                    fn[i].amount = sug;
+                                    break;
+                                default:
+                                    fn[i].amount = eng;
+                                    break;
+                            }
+
+
                         }
-                        res1.foodNutrients=fn;
+                        res1.foodNutrients = fn;
                         dbContext.SaveChanges();
                         ViewBag.Message = String.Format("Nutrient values Updated for the food item " + food_name);
 
@@ -378,6 +379,11 @@ namespace DataGov_API_Intro_6.Controllers
             return View();
         }
 
+        //Fetching the view of AboutUs
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
     }
 }
 

@@ -47,13 +47,13 @@
             <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
             <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
 
-            <a href="aboutus.html" class="bar-item button hide-small hover-white">About Us</a>
+            <a asp-controller="Home" asp-action="AboutUs" class="bar-item button hide-small hover-white">About Us</a>
         </div>
         <!-- Navbar on small screens -->
         <div id="navDemo" class="bar-block theme-d2 hide hide-large hide-medium">
             <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
             <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
-            <a href="aboutus.html" class="bar-item button">About Us</a>
+            <a asp-controller="Home" asp-action="AboutUs" class="bar-item button">About Us</a>
         </div>
     </div>
     <!--Add the content here-->
@@ -90,118 +90,53 @@
                                 <th style="color: white;"></th>
                                 <th></th>
                             </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">Apple</td>
+                            @if (Model != null)
+                            {
 
-                                <td id="r_prot">0.0</td>
-                                <td id="r_carb">14.3</td>
-                                <td id="r_fat">0.65</td>
-                                <td id="r_sug">10.4</td>
-                                <td id="r_eng">52.0</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">3 Musketeers Truffle Crisp Bar</td>
 
-                                <td id="r_prot">6.41</td>
-                                <td id="r_carb">28.8</td>
-                                <td id="r_fat">63.2</td>
-                                <td id="r_sug">57.7</td>
-                                <td id="r_eng">538</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">Acerola juice, raw</td>
+                                @foreach (var item in Model)
+                                {
 
-                                <td id="r_prot">0.4</td>
-                                <td id="r_carb">4.8</td>
-                                <td id="r_fat">0.3</td>
-                                <td id="r_sug">4.5</td>
-                                <td id="r_eng">23</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">Acerola, (west indian cherry), raw</td>
 
-                                <td id="r_prot">0.4</td>
-                                <td id="r_carb">7.69</td>
-                                <td id="r_fat">0.3</td>
-                                <td id="r_sug">0.0</td>
-                                <td id="r_eng">32</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">Acorn stew (Apache)</td>
+                                    <tr style="word-break:break-all;">
+                                        <td id="r_food">@Html.DisplayFor(modelItem => item.description)</td>
+                                        @if(item.foodNutrients != null){
+                                        @foreach (var ite in item.foodNutrients)
+                                {
+                                    //@Html.DisplayFor(modelItem => ite.nutrient.nutrient_type)
+                                           <td id="r_prot"> @if (ite.nutrient.nutrient_type == "Protein") {
+                                                @Html.DisplayFor(modelItem => ite.amount)
+                                            }</td>
+                                            <td id="r_carb">@if (ite.nutrient.nutrient_type == "Carbohydrate")
+                                            {
+                                                @Html.DisplayFor(modelItem => ite.amount)
+                                            }</td>
+                                            <td id="r_fat">
+                                            @if (ite.nutrient.nutrient_type == "Fat")
+                                            {
+                                                @Html.DisplayFor(modelItem => ite.amount)
+                                            }</td>
+                                            <td id="r_sug">
+                                            @if (ite.nutrient.nutrient_type == "Sugar")
+                                            {
+                                                @Html.DisplayFor(modelItem => ite.amount)
+                                            }</td>
+                                            <td id="r_eng">
+                                            @if (ite.nutrient.nutrient_type == "Energy")
+                                            {
+                                                @Html.DisplayFor(modelItem => ite.amount)
+                                            }</td>
+                                        }
+                                        }
+                                        <td></td>
+                                        <td class="edit_row">
+                                            <a asp-controller="Home" asp-action="UpdateRecords"><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                            <a asp-controller="Home" asp-action="DeleteRecords"><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                        </td>
+                                    </tr>
 
-                                <td id="r_prot">6.81</td>
-                                <td id="r_carb">9.22</td>
-                                <td id="r_fat">3.47</td>
-                                <td id="r_sug">0.34</td>
-                                <td id="r_eng">32</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">Noodles</td>
-
-                                <td id="r_prot">11.1</td>
-                                <td id="r_carb">77.8</td>
-                                <td id="r_fat">1.85</td>
-                                <td id="r_sug">1.85</td>
-                                <td id="r_eng">370</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">Rice</td>
-
-                                <td id="r_prot">3.47</td>
-                                <td id="r_carb">26.4</td>
-                                <td id="r_fat">2.43</td>
-                                <td id="r_sug">1.39</td>
-                                <td id="r_eng">139</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
-                            <tr style="word-break:break-all;">
-                                <td id="r_food">ECLAIR ICECREAM BARS, CHOCOLATE</td>
-
-                                <td id="r_prot">2.74</td>
-                                <td id="r_carb">28.8</td>
-                                <td id="r_fat">13.7</td>
-                                <td id="r_sug">23.3</td>
-                                <td id="r_eng">247</td>
-                                <td></td>
-                                <td class="edit_row">
-                                    <a href="update.html" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                    <a href="delete.html" onclick=todeletevalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
-                                </td>
-                            </tr>
+                                }
+                            }
                         </table>
                     </div>
                 </div>

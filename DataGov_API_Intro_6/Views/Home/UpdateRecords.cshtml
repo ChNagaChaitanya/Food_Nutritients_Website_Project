@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Create Data</title>
+    <title>Update Data</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/style.css">
@@ -11,11 +11,18 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
     <style>
-        body, html {
+        body,
+        html {
             height: 100%
         }
 
-        body, h1, h2, h3, h4, h5, h6 {
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: "Amatic SC", sans-serif
         }
 
@@ -36,127 +43,129 @@
             min-height: 90%;
         }
     </style>
-      @{
-    ViewData["Title"] = "CreateRecord";
-}
-
-@{
-    Layout = "";
- }
+    @{
+        ViewData["Title"] = "UpdateRecords";
+    }
+    @{
+        Layout = "";
+    }
 </head>
 
 <body id="myPage">
     <!-- Navbar -->
     <div class="top w3-xlarge">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
-            <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);"
+               onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
-
             <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
             <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
-
             <a asp-controller="Home" asp-action="AboutUs" class="bar-item button hide-small hover-white">About Us</a>
         </div>
         <!-- Navbar on small screens -->
         <div id="navDemo" class="bar-block theme-d2 hide hide-large hide-medium">
-            <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
+            <a href="viewdata.html" class="bar-item button">Nutrient Data</a>
             <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
             <a asp-controller="Home" asp-action="AboutUs" class="bar-item button">About Us</a>
         </div>
     </div>
     <!--Add the content here-->
-    <!--Create Data container-->
+    <!--Update Data container-->
     <!--Nutrient Data container-->
-    <div class="row center w3-container w3-blue w3-grayscale w3-padding-64 w3-xlarge">
+    <div class="row center w3-container w3-padding-64 w3-blue w3-grayscale w3-xlarge" , id="menu">
 
-        <h3>Create Record</h3>
+        <h3>Update Record</h3>
         <hr>
-
-        <br>
-
-        <form asp-controller="Home" asp-action="CreateRecord">
+        <form method="post" class="mt-3" enctype="multipart/form-data" asp-page-handler="UpdateRecords">
             <div class="row1 center">
+
+
 
                 <div class="col-25">
                     <label style="font-weight: bold">Food</label>
-                    <input type="text" for="food_name" class="form-control" name="food_name" size="4" id="food" required/>
+                    <select class="select1" disabled>
+                        <option id="food" selected disabled>Choose..</option>
+                    </select>
                 </div>
                 <div class="col-25">
                     <label style="font-weight: bold">Protiens</label>
-                    <input type="text" for="prot" name="prot" class="form-control" size="4" id="prot" required/>
+                    <input type="text" class="select1" size="4" for="prot" name="prot" id="prot" />
 
 
                 </div>
                 <div class="col-25">
                     <label style="font-weight: bold">Carbohydrates</label>
-                    <input type="text" for="carb" name="carb" class="form-control" size="4" id="carb" required>
+                    <input type="text" class="select1" size="4" for="carb" name="carb" id="carb">
 
 
                 </div>
                 <div class="col-25">
                     <label style="font-weight: bold">Fats</label>
-                    <input type="text" for="fat" name="fat" class="form-control" size="4" id="fat" required>
+                    <input type="text" class="select1" size="4" for="fat" name="fat" id="fat">
 
 
                 </div>
                 <div class="col-25">
                     <label style="font-weight: bold">Sugar</label>
-                    <input type="text" for="sugar" class="form-control" name="sugar" size="4" id="sug" required>
+                    <input type="text" class="select1" size="4" for="sug" name="sug" id="sug">
 
 
                 </div>
                 <div class="col-25">
                     <label style="font-weight: bold">Energy</label>
-                    <input type="text" for="energy" name="energy" class="form-control" size="4" id="eng" required>
+                    <input type="text" class="select1" size="4" for="eng" name="eng" id="eng">
                 </div>
+
+
                 <br>
+
+
             </div>
 
+            <br>
 
+            <div class="w3-row w3-center">
+                <div>
 
-        
-        <br>
-
-        <div class="w3-row w3-center">
-            <div>
-                <br>
-                <br>
-                <button type="submit" name="create" class="button page-btn padding-small" style="height: 60px; width: 120px; font-size: 22px;border-radius:2px;border-color:darkslategray    ">Create</button>
-                <br>
-                <br>
+                    <br>
+                    <br>
+                    <button type="submit" class="button teal padding-small"
+                            style="height: 60px; width: 120px; font-size: 22px;">
+                        Update
+                    </button>
+                    <br>
+                    <br>
+                </div>
             </div>
-        </div>
         </form>
-         @if (ViewBag.Message != null)
-            {
-                <script type="text/javascript">
-            window.onload = function () {
-                
-                text = "Record Created Successfully";
-                document.getElementById("demo").innerHTML = text;
-            };
-                </script>
-
-            }
         <h3 id="demo"></h3>
         <h5 id="demo1"></h5>
-        <p>Click <a asp-controller="Home" asp-action="SearchRecord" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>
+        <p>Click <a href="viewdata.html" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>
         <br>
+
 
 
 
     </div>
-
     <!-- Footer -->
 
     <div class="bottom">
         <footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
 
-            <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/" title="USF">USF</a> | <a href="privacypolicy.html" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
+            <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/"
+                                                                                          title="USF">USF</a> | <a href="privacypolicy.html" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
         </footer>
     </div>
     <script src="/js/script.js"></script>
     <script src="/js/Chart.min.js"></script>
-</body>
+    <script>
+        document.getElementById("food").innerHTML = localStorage.getItem("food");
 
+        document.getElementById("prot").value = localStorage.getItem("prot");
+        document.getElementById("carb").value = localStorage.getItem("carb");
+        document.getElementById("fat").value = localStorage.getItem("fat");
+        document.getElementById("sug").value = localStorage.getItem("sug");
+        document.getElementById("eng").value = localStorage.getItem("eng");
+    </script>
+</body>
 </html>
