@@ -134,32 +134,10 @@ namespace DataGov_API_Intro_6.Controllers
                                             await dbContext.SaveChangesAsync();
                                         }
 
-                                        //food_Nutrient.number = nutrient.number;
-
-
-
-                                        //food_Nutrient.nutrient = nutrient;
-                                        //food_Nutrient.nutrient.number = nutrient.number;
-                                        //food_Nutrient.nutrient.name = name;
-                                        //food_Nutrient.nutrient.unitName = unitName;
-                                        //food_Nutrient.amount = amount;
-                                        //foodNutrients.Add(food_Nutrient);
-                                        //dbContext.ChangeTracker.Clear();
-                                        //if (dbContext.Food_Nutrients.Where(c => c.fdcId.Equals(food_Nutrient.fdcId) &&
-                                        //c.number.Equals(nutrient.number)).Count() == 0)
-                                        //{
-                                        //dbContext.Food_Nutrients.Add(food_Nutrient);
-                                        //await dbContext.SaveChangesAsync();
-                                        //}
-
-
-                                        //if (foodItem.foodNutrients == null)
-                                        //{ foodItem.foodNutrients = new List<Food_Nutrient>();
-                                        //}
-                                        //foodItem.foodNutrients.Add(food_Nutrient);
-                                        //food_Nutrient = new Food_Nutrient();
-                                        //dbContext.Nutrients.Attach(nutrient);
-                                        food_Nutrient = new Food_Nutrient { amount = amount, food_item = foodItem, nutrient = nutrient };
+                                        
+                                        food_Nutrient = new Food_Nutrient { fdcId=foodItem.fdcId,
+                                            number=nutrient.number,amount = amount, food_item = foodItem, 
+                                            nutrient=new Nutrient { nutrient_type = nutrient.nutrient_type, name = nutrient.name, unitName = nutrient.unitName } };
                                         foodNutrients.Add(food_Nutrient);
 
                                         
@@ -177,11 +155,13 @@ namespace DataGov_API_Intro_6.Controllers
 
                                     }
                                 }
-                                nutrients = new List<Nutrient>();
-                                foodNutrients = new List<Food_Nutrient>();
+                                
                                 foodItem.foodNutrients = foodNutrients;
                                 foodItems.Add(foodItem);
-
+                                dbContext.UpdateRange(foodNutrients);
+                                dbContext.UpdateRange(foodItem);
+                                nutrients = new List<Nutrient>();
+                                foodNutrients = new List<Food_Nutrient>();
                                 foodItem = new Food_Item();
                             }
                         }
@@ -224,33 +204,38 @@ namespace DataGov_API_Intro_6.Controllers
                 string[] nutrienttype = new string[] { "Protein", "Carbohydrate", "Fat", "Sugar", "Energy" };
                 float[] nutrientamt = new float[] { prot, carb, fat, sugar, energy };
                 string[] nutrientunit = new string[] { "G", "G", "G", "G", "KCAL" };
-
-                List<Food_Nutrient> fn = new List<Food_Nutrient>();
-                for (int i=0;i< nutrienttype.Length;i++)
+                var nres = dbContext.Food_Items.Where(x => x.description.ToLower() == food_name.ToLower())
+                        .Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
+                if (nres.Count==0)
                 {
-                    Nutrient nutrient = new Nutrient();
-                    nutrient.name = nutrienttype[i];
-                    nutrient.unitName = nutrientunit[i];
-                    nutrient.nutrient_type = nutrienttype[i];
-                    Food_Nutrient foodnut = new Food_Nutrient();
-                    foodnut.nutrient = nutrient;
-                    foodnut.amount = nutrientamt[i];
-
-                    fn.Add(foodnut);
-                    
-                }
-                if (food_name != null)
-                {
-                    Food_Item cr = new Food_Item(food_name, fn)
+                    List<Food_Nutrient> fn = new List<Food_Nutrient>();
+                    for (int i = 0; i < nutrienttype.Length; i++)
                     {
-                        description = food_name,
-                        foodNutrients = fn
-                        
-                    };
-                    dbContext.Food_Items.Add(cr);
-                    dbContext.SaveChanges();
-                    ViewBag.Message = String.Format("Food Record Added ");
+                        Nutrient nutrient = new Nutrient();
+                        nutrient.name = nutrienttype[i];
+                        nutrient.unitName = nutrientunit[i];
+                        nutrient.nutrient_type = nutrienttype[i];
+                        Food_Nutrient foodnut = new Food_Nutrient();
+                        foodnut.nutrient = nutrient;
+                        foodnut.amount = nutrientamt[i];
+
+                        fn.Add(foodnut);
+
+                    }
+                    if (food_name != null)
+                    {
+                        Food_Item cr = new Food_Item(food_name, fn)
+                        {
+                            description = food_name,
+                            foodNutrients = fn
+
+                        };
+                        dbContext.Food_Items.Add(cr);
+                        dbContext.SaveChanges();
+                        ViewBag.Message = String.Format("Food Record Added ");
+                    }
                 }
+                
                 if (search != null)
                 {
                     SearchRecord(search);
@@ -272,16 +257,61 @@ namespace DataGov_API_Intro_6.Controllers
             try
             {
                 
-
+                
                 if (search != null)
                 {
-                    var res = dbContext.Food_Items.Where(x => x.description.ToLower().ToString() == search.Trim().ToLower())
-                        .Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
-                    
-                    List<Food_Nutrient> foodnutri = new List<Food_Nutrient>();
-                    //foodnutri.Add();
-                                        
-                    return View(res);
+                    var nres = dbContext.Food_Items.Where(x => x.description.ToLower().Contains(search.Trim().ToLower())).
+                        Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
+                    var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
+                        a => a.number, b => b.number, (a, b) => new { b.nutrient_type,a.number, b.unitName}).Distinct()
+                        .ToList();
+
+
+                    if (nres.Count != 0)
+                    {
+                        List<string> foodnames = new List<string>();
+                        List<Food_Item> finalFi = new List<Food_Item>();
+                        for (int j = 0; j < nres.Count; j++)
+                        {
+
+                            var food_name = nres[j].description;
+                            var food_nutr = nres[j].foodNutrients;
+
+                            List<Food_Nutrient> fn = new List<Food_Nutrient>();
+                            for (int i = 0; i < food_nutr.Count; i++)
+                            {
+                                var nutdet = res2.Find(item => item.number == food_nutr[i].number);
+                                if (nutdet != null)
+                                {
+                                    Nutrient nutrient = new Nutrient();
+                                    nutrient.name = nutdet.nutrient_type;
+                                    nutrient.unitName = nutdet.unitName;
+                                    nutrient.nutrient_type = nutdet.nutrient_type;
+                                    Food_Nutrient foodnut = new Food_Nutrient();
+                                    foodnut.nutrient = nutrient;
+                                    foodnut.amount = food_nutr[i].amount;
+
+                                    fn.Add(foodnut);
+                                }
+
+                            }
+                            Food_Item cr = new Food_Item(food_name, fn)
+                            {
+                                description = food_name,
+                                foodNutrients = fn
+
+                            };
+                            foodnames.Add(food_name);
+                            finalFi.Add(cr);
+                            
+                           
+                            ViewBag.FoodNames = String.Join(",", foodnames.Select(d => d));
+
+                        }
+                        return View(finalFi);
+
+                    }
+
 
                 }
             }
@@ -378,6 +408,71 @@ namespace DataGov_API_Intro_6.Controllers
 
             return View();
         }
+
+        //Analyze Record
+        public IActionResult Analyze()
+        {
+            try
+            {
+
+                var nres  = dbContext.Food_Items.Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
+                var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
+                        a => a.number, b => b.number, (a, b) => new { b.nutrient_type, a.number, b.unitName }).Distinct()
+                        .ToList();
+                if (nres.Count != 0)
+                {
+                    List<string> foodnames = new List<string>();
+                    List<Food_Item> finalFi = new List<Food_Item>();
+                    for (int j=0;j< nres.Count;j++)
+                    {
+
+                        var food_name = nres[j].description;
+                        var food_nutr = nres[j].foodNutrients;
+                        
+                        List<Food_Nutrient> fn = new List<Food_Nutrient>();
+                        for (int i = 0; i < food_nutr.Count; i++)
+                        {
+                            var nutdet = res2.Find(item => item.number == food_nutr[i].number);
+                            if (nutdet != null) {
+                                Nutrient nutrient = new Nutrient();
+                                nutrient.name = nutdet.nutrient_type;
+                                nutrient.unitName = nutdet.unitName;
+                                nutrient.nutrient_type = nutdet.nutrient_type;
+                                Food_Nutrient foodnut = new Food_Nutrient();
+                                foodnut.nutrient = nutrient;
+                                foodnut.amount = food_nutr[i].amount;
+
+                                fn.Add(foodnut);
+                            }
+
+                        }
+                        Food_Item cr = new Food_Item(food_name, fn)
+                        {
+                            description = food_name,
+                            foodNutrients = fn
+
+                        };
+                        foodnames.Add(food_name);
+                        finalFi.Add(cr);
+                        
+                        
+                        ViewBag.FoodNames = String.Join(",", foodnames.Select(d => d));
+
+                    }
+                    return View(finalFi);
+                
+                }
+                
+                
+            }
+            catch (Exception e)
+            {
+                // This is a useful place to insert a breakpoint and observe the error message.
+                Console.WriteLine(e.Message);
+            }
+            return View();
+        }
+
 
         //Fetching the view of AboutUs
         public IActionResult AboutUs()

@@ -138,6 +138,18 @@
                 </script>
 
             }
+            @if(ViewBag.Message == null)
+                {
+                        <script type="text/javascript">
+            window.onload = function () {
+                
+                text = "Food Record Already Exists.";
+                document.getElementById("demo").innerHTML = text;
+            };
+                </script>
+
+                   
+                }
         <h3 id="demo"></h3>
         <h5 id="demo1"></h5>
         <p>Click <a asp-controller="Home" asp-action="SearchRecord" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>

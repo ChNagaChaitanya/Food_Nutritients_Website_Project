@@ -46,6 +46,16 @@ namespace DataGov_API_Intro_6.Models
             
             }
 
+            public Food_Nutrient(Guid id, Guid numbaer, float amt, string type)
+            {
+            
+                this.nutrient.name = type;
+
+                this.nutrient.nutrient_type = type;
+                this.amount = amt;
+            
+            }
+
             public Food_Nutrient()
             {
 
@@ -70,9 +80,15 @@ namespace DataGov_API_Intro_6.Models
         public class Nutrient
         {
 
-            public Nutrient()
+            public Nutrient(string name, string unitname, string nutrienttype)
             {
-
+                this.name = name;
+                this.unitName= unitname;
+                this.nutrient_type= nutrienttype;
+            }
+            public Nutrient()
+            { 
+             
             }
             [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             [Key]

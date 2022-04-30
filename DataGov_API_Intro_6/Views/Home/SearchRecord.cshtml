@@ -65,9 +65,13 @@
                 <span style="float:left">
                     <a asp-controller="Home" asp-action="CreateRecord" style="color: #171f4e;">Add Food Item</a>
                 </span>
+                <form asp-controller="Home" asp-action="SearchRecord">
                 <span style="float:right">
-                    <i class="fa fa-search"></i><input type="text" style="text-align:center" onkeyup="myFunction()" placeholder="Search for food">
+                    
+                    <i class="fa fa-search"></i><input type="text" for="search" class="form-control" name="search" style="text-align:center" onkeyup="myFunction()" placeholder="Search for food">
+                    <button type="submit" name="search" class="button page-btn padding-small" style="height: 60px; width: 120px; font-size: 22px;border-radius:2px;border-color:darkslategray    ">Search</button>
                 </span>
+                </form>
             </div>
             <br>
             <br>
@@ -90,47 +94,76 @@
                                 <th style="color: white;"></th>
                                 <th></th>
                             </tr>
-                            @if (Model != null)
-                            {
+                            @if (Model != null){
 
 
                                 @foreach (var item in Model)
                                 {
-
-
+                                 
                                     <tr style="word-break:break-all;">
-                                        <td id="r_food">@Html.DisplayFor(modelItem => item.description)</td>
-                                        @if(item.foodNutrients != null){
-                                        @foreach (var ite in item.foodNutrients)
-                                {
-                                    //@Html.DisplayFor(modelItem => ite.nutrient.nutrient_type)
-                                           <td id="r_prot"> @if (ite.nutrient.nutrient_type == "Protein") {
-                                                @Html.DisplayFor(modelItem => ite.amount)
-                                            }</td>
-                                            <td id="r_carb">@if (ite.nutrient.nutrient_type == "Carbohydrate")
+                                        <td id="r_food">@(item.description)</td>
+                                        @if (item.foodNutrients.Count > 0)
+                                        {
+                                            @foreach (var ite in item.foodNutrients)
                                             {
-                                                @Html.DisplayFor(modelItem => ite.amount)
-                                            }</td>
-                                            <td id="r_fat">
-                                            @if (ite.nutrient.nutrient_type == "Fat")
-                                            {
-                                                @Html.DisplayFor(modelItem => ite.amount)
-                                            }</td>
-                                            <td id="r_sug">
-                                            @if (ite.nutrient.nutrient_type == "Sugar")
-                                            {
-                                                @Html.DisplayFor(modelItem => ite.amount)
-                                            }</td>
-                                            <td id="r_eng">
-                                            @if (ite.nutrient.nutrient_type == "Energy")
-                                            {
-                                                @Html.DisplayFor(modelItem => ite.amount)
-                                            }</td>
-                                        }
+                                                @if (ite.nutrient.nutrient_type == "Protein")
+                                                {
+                                                    <td id="r_prot">@ite.amount</td>
+                                                }
+                                                else
+                                                {
+                                                    <td id="r_prot">0</td>
+
+                                                }
+
+                                                @if (ite.nutrient.nutrient_type == "Carbohydrate")
+                                                {
+                                                    <td id="r_carb">@ite.amount</td>
+                                                }
+
+                                                else
+                                                {
+                                                    <td id="r_carb">0</td>
+
+                                                }
+
+                                                @if (ite.nutrient.nutrient_type == "Fat")
+                                                {
+                                                    <td id="r_fat">@ite.amount</td>
+                                                }
+
+                                                else
+                                                {
+                                                    <td id="r_fat">0</td>
+
+                                                }
+
+                                                @if (ite.nutrient.nutrient_type == "Sugar")
+                                                {
+                                                    <td id="r_sug">@ite.amount</td>
+                                                }
+
+                                                else
+                                                {
+                                                    <td id="r_sug">0</td>
+
+                                                }
+                                                @if (ite.nutrient.nutrient_type == "Energy")
+                                                {
+                                                    <td id="r_eng">@ite.amount</td>
+                                                }
+
+                                                else
+                                                {
+                                                    <td id="r_eng">0</td>
+
+                                                }
+                                            }
                                         }
                                         <td></td>
                                         <td class="edit_row">
                                             <a asp-controller="Home" asp-action="UpdateRecords"><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                          
                                             <a asp-controller="Home" asp-action="DeleteRecords"><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
                                         </td>
                                     </tr>
