@@ -256,13 +256,15 @@ namespace DataGov_API_Intro_6.Controllers
         {
             try
             {
-                
-                
+
+                var nres = dbContext.Food_Items.Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
                 if (search != null)
                 {
-                    var nres = dbContext.Food_Items.Where(x => x.description.ToLower().Contains(search.Trim().ToLower())).
+                    nres = dbContext.Food_Items.Where(x => x.description.ToLower().Contains(search.Trim().ToLower())).
                         Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
-                    var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
+                }
+                
+                var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
                         a => a.number, b => b.number, (a, b) => new { b.nutrient_type,a.number, b.unitName}).Distinct()
                         .ToList();
 
@@ -313,7 +315,8 @@ namespace DataGov_API_Intro_6.Controllers
                     }
 
 
-                }
+                
+                
             }
             catch (Exception e)
             {
