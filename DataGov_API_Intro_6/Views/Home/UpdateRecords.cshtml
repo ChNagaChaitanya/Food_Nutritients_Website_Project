@@ -55,17 +55,18 @@
     <!-- Navbar -->
     <div class="top w3-xlarge">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
-            <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);"
-               onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
+
             <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
-            <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
+            <a asp-controller="Home" asp-action="Analyze" class="bar-item button">Visualize Nutrient Data</a>
+
             <a asp-controller="Home" asp-action="AboutUs" class="bar-item button hide-small hover-white">About Us</a>
         </div>
         <!-- Navbar on small screens -->
         <div id="navDemo" class="bar-block theme-d2 hide hide-large hide-medium">
-            <a href="viewdata.html" class="bar-item button">Nutrient Data</a>
-            <a href="analyze.html" class="bar-item button">Visualize Nutrient Data</a>
+            <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
+            <a asp-controller="Home" asp-action="Analyze" class="bar-item button">Visualize Nutrient Data</a>
             <a asp-controller="Home" asp-action="AboutUs" class="bar-item button">About Us</a>
         </div>
     </div>
@@ -140,7 +141,7 @@
         </form>
         <h3 id="demo"></h3>
         <h5 id="demo1"></h5>
-        <p>Click <a href="viewdata.html" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>
+        <p>Click <a asp-controller="Home" asp-action="SearchRecord" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>
         <br>
 
 
@@ -153,7 +154,7 @@
         <footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
 
             <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/"
-                                                                                          title="USF">USF</a> | <a href="privacypolicy.html" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
+                                                                                          title="USF">USF</a> | <a asp-controller="Home" asp-action="Privacy" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
         </footer>
     </div>
     <script src="/js/script.js"></script>

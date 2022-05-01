@@ -1,0 +1,109 @@
+﻿@model DataGov_API_Intro_6.Models.ChartModel
+@{ Layout = null;}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analyze</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="js/Chart.min.js"></script>
+    <script src="js/script.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+    <style>
+        body, html {
+            height: 100%
+        }
+
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Amatic SC", sans-serif
+        }
+
+        .menu {
+            display: none
+        }
+
+        .page-btn {
+            color: black !important;
+            background-color: white !important;
+            border-radius: 2px;
+        }
+
+        .bgimg {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-image: url("/w3images/pizza.jpg");
+            min-height: 90%;
+        }
+    </style>
+     @{
+    ViewData["Title"] = "VisualizeRecord";
+}
+
+@{
+    Layout = "";
+ }
+</head>
+
+<body id="myPage">
+	<div class="top w3-xlarge">
+        <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
+            <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
+
+            <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
+            <a asp-controller="Home" asp-action="Analyze" class="bar-item button">Visualize Nutrient Data</a>
+
+            <a asp-controller="Home" asp-action="AboutUs" class="bar-item button hide-small hover-white">About Us</a>
+        </div>
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="bar-block theme-d2 hide hide-large hide-medium">
+            <a asp-controller="Home" asp-action="SearchRecord" class="bar-item button">Nutrient Data</a>
+            <a asp-controller="Home" asp-action="Analyze" class="bar-item button">Visualize Nutrient Data</a>
+            <a asp-controller="Home" asp-action="AboutUs" class="bar-item button">About Us</a>
+        </div>
+    </div>
+
+    <h1>Bar chart</h1>
+    <canvas id="myChart" style="width: 100%; max-width: 600px; height: 500px;margin: 0 auto; background-color:white" ></canvas>
+
+    <script>
+       // var xValues = ["Buffalo", "Fairport", "Ithaca", "Waterloo", "Watkins Glen", "Union Springs", "Clevelend"];
+        //var yValues = [10, 4, 7, 3, 5, 8, 1];
+         var xValues = [@Html.Raw(ViewBag.Labels)];
+         var yValues = [@Html.Raw(ViewBag.Data)];
+        var barColors = ["cyan", "green", "blue", "orange", "brown", "purple", "pink"];
+        new Chart("myChart", {
+            type: 'bar',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Protein chart',
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

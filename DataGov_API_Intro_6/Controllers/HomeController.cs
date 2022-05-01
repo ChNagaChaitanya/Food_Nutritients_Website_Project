@@ -422,6 +422,14 @@ namespace DataGov_API_Intro_6.Controllers
                 var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
                         a => a.number, b => b.number, (a, b) => new { b.nutrient_type, a.number, b.unitName }).Distinct()
                         .ToList();
+                List<float> proteins = new List<float>();
+                List<float> carbs = new List<float>();
+                List<float> sugars = new List<float>();
+                List<string> nutrientlabels = new List<string>();
+                List<string> nutrientlabelcheck = new List<string>();
+                nutrientlabels.Add("Protein");
+                nutrientlabels.Add("Carbohydrate");
+                nutrientlabels.Add("Sugar");
                 if (nres.Count != 0)
                 {
                     List<string> foodnames = new List<string>();
@@ -431,12 +439,14 @@ namespace DataGov_API_Intro_6.Controllers
 
                         var food_name = nres[j].description;
                         var food_nutr = nres[j].foodNutrients;
-                        
+                        float amt = 0;
+
                         List<Food_Nutrient> fn = new List<Food_Nutrient>();
                         for (int i = 0; i < food_nutr.Count; i++)
                         {
                             var nutdet = res2.Find(item => item.number == food_nutr[i].number);
-                            if (nutdet != null) {
+                            if (nutdet != null)
+                            {
                                 Nutrient nutrient = new Nutrient();
                                 nutrient.name = nutdet.nutrient_type;
                                 nutrient.unitName = nutdet.unitName;
@@ -446,8 +456,40 @@ namespace DataGov_API_Intro_6.Controllers
                                 foodnut.amount = food_nutr[i].amount;
 
                                 fn.Add(foodnut);
+                                
+                                switch (nutdet.nutrient_type)
+                                {
+                                    case "Protein":
+                                        proteins.Add(food_nutr[i].amount);
+                                        nutrientlabelcheck.Add("Protein");
+                                        break;
+                                    case "Carbohydrate":
+                                        carbs.Add(food_nutr[i].amount);
+                                        nutrientlabelcheck.Add("Carbohydrate");
+                                        break;
+                                    
+                                    case "Sugar":
+                                        sugars.Add(food_nutr[i].amount);
+                                        nutrientlabelcheck.Add("Sugar");
+                                        break;
+
+                                    
+
+                                }
                             }
 
+                        }
+                        if(!nutrientlabelcheck.Contains("Protein"))
+                        {
+                            proteins.Add(amt);
+                        }
+                        if (!nutrientlabelcheck.Contains("Carbohydrate"))
+                        {
+                            carbs.Add(amt);
+                        }
+                        if (!nutrientlabelcheck.Contains("Sugar"))
+                        {
+                            sugars.Add(amt);
                         }
                         Food_Item cr = new Food_Item(food_name, fn)
                         {
@@ -457,16 +499,56 @@ namespace DataGov_API_Intro_6.Controllers
                         };
                         foodnames.Add(food_name);
                         finalFi.Add(cr);
-                        
-                        
+
+                       
+                        ViewBag.Proteins = String.Join(",", proteins.Select(d => d));
+                        ViewBag.Carbs = String.Join(",", carbs.Select(d => d));
+                        ViewBag.Sugars = String.Join(",", sugars.Select(d => d));
+
                         ViewBag.FoodNames = String.Join(",", foodnames.Select(d => d));
+                        //ViewBag.NutrientAmounts = String.Join(",", finalFi.Select(d => d.foodNutrients.Select(e=>e.amount)));
 
                     }
-                    return View(finalFi);
-                
+                    List<string> ChartLabels = new List<string>();
+                    ChartLabels.AddRange(foodnames);
+                    List<float> ChartData = new List<float>();
+                    ChartData.AddRange(proteins);
+                    ChartModel Model1 = new ChartModel
+                    {
+                        ChartType = "bar",
+                        Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
+                        Data = String.Join(",", ChartData.Select(d => d)),
+                        Title = "Test chart"
+                    };
+                    ChartData = new List<float>();
+                    ChartData.AddRange(carbs);
+                    ChartModel Model2 = new ChartModel
+                    {
+                        ChartType = "bar",
+                        Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
+                        Data = String.Join(",", ChartData.Select(d => d)),
+                        Title = "Test chart"
+                    };
+                    ChartData = new List<float>();
+                    ChartData.AddRange(sugars);
+                    ChartModel Model3 = new ChartModel
+                    {
+                        ChartType = "bar",
+                        Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
+                        Data = String.Join(",", ChartData.Select(d => d)),
+                        Title = "Test chart"
+                    };
+                    List<ChartModel> cm = new List<ChartModel>();
+                    cm.Add(Model1);
+                    cm.Add(Model2);
+                    cm.Add(Model3);
+                    return View(cm);
+
+
+
                 }
-                
-                
+
+
             }
             catch (Exception e)
             {
@@ -476,7 +558,150 @@ namespace DataGov_API_Intro_6.Controllers
             return View();
         }
 
+        //Fetching the view of AboutUs
+        public ViewResult DemoChart()
+        {
+            try
+            {
 
+                var nres = dbContext.Food_Items.Select(x => new Food_Item(x.description, x.foodNutrients)).ToList();
+                var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
+                        a => a.number, b => b.number, (a, b) => new { b.nutrient_type, a.number, b.unitName }).Distinct()
+                        .ToList();
+                List<float> proteins = new List<float>();
+                List<float> carbs = new List<float>();
+                List<float> sugars = new List<float>();
+                List<string> nutrientlabels = new List<string>();
+                List<string> nutrientlabelcheck = new List<string>();
+                nutrientlabels.Add("Protein");
+                nutrientlabels.Add("Carbohydrate");
+                nutrientlabels.Add("Sugar");
+                if (nres.Count != 0)
+                {
+                    List<string> foodnames = new List<string>();
+                    List<Food_Item> finalFi = new List<Food_Item>();
+                    for (int j = 0; j < nres.Count; j++)
+                    {
+
+                        var food_name = nres[j].description;
+                        var food_nutr = nres[j].foodNutrients;
+                        float amt = 0;
+
+                        List<Food_Nutrient> fn = new List<Food_Nutrient>();
+                        for (int i = 0; i < food_nutr.Count; i++)
+                        {
+                            var nutdet = res2.Find(item => item.number == food_nutr[i].number);
+                            if (nutdet != null)
+                            {
+                                Nutrient nutrient = new Nutrient();
+                                nutrient.name = nutdet.nutrient_type;
+                                nutrient.unitName = nutdet.unitName;
+                                nutrient.nutrient_type = nutdet.nutrient_type;
+                                Food_Nutrient foodnut = new Food_Nutrient();
+                                foodnut.nutrient = nutrient;
+                                foodnut.amount = food_nutr[i].amount;
+
+                                fn.Add(foodnut);
+
+                                switch (nutdet.nutrient_type)
+                                {
+                                    case "Protein":
+                                        proteins.Add(food_nutr[i].amount);
+                                        nutrientlabelcheck.Add("Protein");
+                                        break;
+                                    case "Carbohydrate":
+                                        carbs.Add(food_nutr[i].amount);
+                                        nutrientlabelcheck.Add("Carbohydrate");
+                                        break;
+
+                                    case "Sugar":
+                                        sugars.Add(food_nutr[i].amount);
+                                        nutrientlabelcheck.Add("Sugar");
+                                        break;
+
+
+
+                                }
+                            }
+
+                        }
+                        if (!nutrientlabelcheck.Contains("Protein"))
+                        {
+                            proteins.Add(amt);
+                        }
+                        if (!nutrientlabelcheck.Contains("Carbohydrate"))
+                        {
+                            carbs.Add(amt);
+                        }
+                        if (!nutrientlabelcheck.Contains("Sugar"))
+                        {
+                            sugars.Add(amt);
+                        }
+                        Food_Item cr = new Food_Item(food_name, fn)
+                        {
+                            description = food_name,
+                            foodNutrients = fn
+
+                        };
+                        foodnames.Add(food_name);
+                        finalFi.Add(cr);
+
+
+                        ViewBag.Proteins = String.Join(",", proteins.Select(d => d));
+                        ViewBag.Carbs = String.Join(",", carbs.Select(d => d));
+                        ViewBag.Sugars = String.Join(",", sugars.Select(d => d));
+
+                        ViewBag.FoodNames = String.Join(",", foodnames.Select(d => d));
+                        //ViewBag.NutrientAmounts = String.Join(",", finalFi.Select(d => d.foodNutrients.Select(e=>e.amount)));
+
+                    }
+                    List<string> ChartLabels = new List<string>();
+                    ChartLabels.AddRange(foodnames);
+                    List<float> ChartData = new List<float>();
+                    ChartData.AddRange(proteins);
+                    ChartModel Model1 = new ChartModel
+                    {
+                        ChartType = "bar",
+                        Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
+                        Data = String.Join(",", ChartData.Select(d => d)),
+                        Title = "Test chart"
+                    };
+                    ChartData = new List<float>();
+                    ChartData.AddRange(carbs);
+                    ChartModel Model2 = new ChartModel
+                    {
+                        ChartType = "bar",
+                        Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
+                        Data = String.Join(",", ChartData.Select(d => d)),
+                        Title = "Test chart"
+                    };
+                    ChartData = new List<float>();
+                    ChartData.AddRange(sugars);
+                    ChartModel Model3 = new ChartModel
+                    {
+                        ChartType = "bar",
+                        Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
+                        Data = String.Join(",", ChartData.Select(d => d)),
+                        Title = "Test chart"
+                    };
+                    List<ChartModel> cm = new List<ChartModel>();
+                    cm.Add(Model1);
+                    cm.Add(Model2);
+                    cm.Add(Model3);
+                    return View(cm);
+
+
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                // This is a useful place to insert a breakpoint and observe the error message.
+                Console.WriteLine(e.Message);
+            }
+            return View();
+        }
         //Fetching the view of AboutUs
         public IActionResult AboutUs()
         {
