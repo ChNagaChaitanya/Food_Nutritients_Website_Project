@@ -139,6 +139,19 @@ function todeletevalue(ele) {
 
 
 //chart js --- chart for analyze tab
+var dataObjects = [{
+	food: document.getElementById("demo2").innerHTML,
+	label: "Protein(G)",
+	data: document.getElementById("demo3").innerHTML
+}, {
+		food: document.getElementById("demo2").innerHTML,
+	label: "Carbohydrate(G)",
+	data: document.getElementById("demo4").innerHTML
+	}, {
+		food: document.getElementById("demo2").innerHTML,
+	label: "Sugars(G)",
+	data: document.getElementById("demo5").innerHTML
+}]
 /* data */
 var data = {
 	labels: dataObjects[0].food,
@@ -202,22 +215,7 @@ var chart = new Chart('chart-0', {
 	options: options
 });
 
-function changeData(index, foodItems) {
-	
-	var dataObjects = [{
-		food: foodItems,
-		label: "Protein(G)",
-		data: [161, 96.15, 88.32, 88.32, 85.6, 84.08, 82.4, 82.4, 78.13, 77.27]
-	}, {
-		food: foodItems,
-		label: "Carbohydrate(G)",
-		data: [199.58, 127.77, 100, 100, 99.8, 99.77, 99.6, 99.53, 99.1, 99]
-	}, {
-		food: foodItems,
-		label: "Sugars(G)",
-		data: [99.8, 99.19, 97.81, 97.3, 97.15, 97.02, 95.45, 95.29, 95.29, 94.7]
-	}]
-
+function changeData(index) {
 	chart.data.datasets.forEach(function (dataset) {
 		data.labels = dataObjects[index].food;
 		dataset.label = dataObjects[index].label;

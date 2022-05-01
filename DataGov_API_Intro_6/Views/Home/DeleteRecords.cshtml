@@ -1,4 +1,4 @@
-﻿@model List<DataGov_API_Intro_6.Models.Food_Item>
+﻿
 <!DOCTYPE html>
 <html>
 
@@ -32,9 +32,7 @@
             border-radius: 2px;
         }
     </style>
-    @{
-        ViewData["Title"] = "DeleteRecords";
-    }
+    
     @{
         Layout = "";
     }
@@ -65,7 +63,7 @@
     <div class="row center w3-container w3-padding-64 w3-blue w3-grayscale w3-xlarge">
         <h1>Delete Record</h1>
         <hr>
-        <form method="post" class="mt-3" enctype="multipart/form-data" asp-page-handler="DeleteRecords">
+        <form id="myForm" asp-controller="Home" asp-action="DeleteRecords" onsubmit="return deleteformvalidation()">
             <div class="row1 center">
                 <div class="col-25">
                     <label>Food Description</label>
@@ -109,7 +107,8 @@
                 <div>
                     <br>
                     <br>
-                    <button type="submit" class="button padding-small page-btn"
+                    <input type="text" for="food_name" name="food_name" class="form-control" size="4" id="foodname" hidden>
+                    <button type="submit" name="delete" class="button padding-small page-btn"
                             style="height: 60px; width: 120px; font-size: 22px;">
                         Delete
                     </button>
@@ -118,6 +117,23 @@
                 </div>
             </div>
         </form>
+        
+        @if (@Html.Raw(ViewBag.Message) != null)
+            {
+                <h3 id="demo2">@Html.Raw(ViewBag.Message)</h3>
+                <script type="text/javascript">
+                    
+            window.onload = function () {
+                
+                
+                document.getElementById("demo").innerHTML = "";
+                
+	            document.getElementById("demo1").innerHTML = "";
+            };
+                </script>
+
+            }
+            
         <h3 id="demo"></h3>
         <h5 id="demo1"></h5>
         <p>Click <a asp-controller="Home" asp-action="SearchRecord" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>
@@ -134,7 +150,7 @@
                                                                                           title="USF">USF</a> | <a asp-controller="Home" asp-action="Privacy" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
         </footer>
     </div>
-    <script src="/js/script.js"></script>
+    
     <script src="/js/Chart.min.js"></script>
     <script>
         document.getElementById("food").innerHTML = localStorage.getItem("food");
@@ -143,6 +159,26 @@
         document.getElementById("fat").innerHTML = localStorage.getItem("fat");
         document.getElementById("sug").innerHTML = localStorage.getItem("sug");
         document.getElementById("eng").innerHTML = localStorage.getItem("eng");
+        document.getElementById("foodname").value = localStorage.getItem("food");
+
+        function deleteformvalidation() {
+	var x, text, text1;
+	var res = confirm("Are you sure you want to delete the record?")
+	if (res) {
+        
+		
+        return true;
+	} else {
+		text = "Record not Deleted";
+		text1 = "Please select Yes to delete.";
+        document.getElementById("demo").innerHTML = text;
+	    document.getElementById("demo1").innerHTML = text1;
+        document.getElementById("demo2").innerHTML = "";
+        return false;
+	}
+	
+}
+        
     </script>
 </body>
 </html>

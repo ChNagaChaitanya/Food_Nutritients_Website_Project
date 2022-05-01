@@ -39,7 +39,7 @@
 </head>
 <body id="myPage">
     <!-- Navbar -->
-    <div class="top w3-xlarge">
+    <<div class="top w3-xlarge">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
             <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
@@ -99,7 +99,12 @@
 
                                 @foreach (var item in Model)
                                 {
-                                 
+                                    var protVal = 0.0;
+                                    var carbVal = 0.0;
+                                    var fatVal = 0.0;
+                                    var energyVal = 0.0;
+                                    var sugarVal = 0.0;
+
                                     <tr style="word-break:break-all;">
                                         <td id="r_food">@(item.description)</td>
                                         @if (item.foodNutrients.Count > 0)
@@ -108,64 +113,50 @@
                                             {
                                                 @if (ite.nutrient.nutrient_type == "Protein")
                                                 {
-                                                    <td id="r_prot">@ite.amount</td>
-                                                }
-                                                else
-                                                {
-                                                    <td id="r_prot">0</td>
 
+                                                    protVal = @ite.amount;
+
+                                                   
                                                 }
 
                                                 @if (ite.nutrient.nutrient_type == "Carbohydrate")
                                                 {
-                                                    <td id="r_carb">@ite.amount</td>
+                                                    
+                                                     carbVal = @ite.amount;
                                                 }
-
-                                                else
-                                                {
-                                                    <td id="r_carb">0</td>
-
-                                                }
+                                                
 
                                                 @if (ite.nutrient.nutrient_type == "Fat")
                                                 {
-                                                    <td id="r_fat">@ite.amount</td>
+                                                    fatVal = @ite.amount;
                                                 }
 
-                                                else
-                                                {
-                                                    <td id="r_fat">0</td>
-
-                                                }
 
                                                 @if (ite.nutrient.nutrient_type == "Sugar")
                                                 {
-                                                    <td id="r_sug">@ite.amount</td>
+                                                    sugarVal = @ite.amount;
                                                 }
 
-                                                else
-                                                {
-                                                    <td id="r_sug">0</td>
-
-                                                }
+                                                
                                                 @if (ite.nutrient.nutrient_type == "Energy")
                                                 {
-                                                    <td id="r_eng">@ite.amount</td>
-                                                }
-
-                                                else
-                                                {
-                                                    <td id="r_eng">0</td>
-
+                                                    energyVal = @ite.amount;
                                                 }
                                             }
                                         }
+                                         <td id="r_prot">@(Math.Round(protVal,2))</td>
+                                          <td id="r_carb">@(Math.Round(carbVal,2))</td>
+                                           <td id="r_fat">@(Math.Round(fatVal,2))</td>
+                                            <td id="r_sug">@(Math.Round(sugarVal,2))</td>
+                                             <td id="r_eng">@(Math.Round(energyVal,2))</td>
                                         <td></td>
                                         <td class="edit_row">
-                                            <a asp-controller="Home" asp-action="UpdateRecords"><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
-                                          
-                                            <a asp-controller="Home" asp-action="DeleteRecords"><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
+                                            <a href="UpdateRecords" onclick=togetvalue(this)><button onclick=togetvalue(this) class="button teal padding-small"><i>Update</i></button></a>
+                                         </td>
+                                         <td>
+                                            <a href="DeleteRecords" onclick=togetvalue(this)><button onclick=todeletevalue(this) class="button teal padding-small">Delete</button></a>
                                         </td>
+                                        
                                     </tr>
 
                                 }
@@ -181,11 +172,23 @@
     <div class="bottom">
         <footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
 
-            <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/" title="USF">USF</a> | <a asp-controller="Home" asp-action="Privacy" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
+            <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/" title="USF">USF</a> | <a href="privacypolicy.html" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
         </footer>
     </div>
     <script src="js/script.js"></script>
     <script src="js/Chart.min.js"></script>
+    <script>
+    function todeletevalue(ele) {
+	var food, prot, carb, fat, sug, eng;
+    alert(ele.parentNode.parentNode.parentNode.children[0].innerHTML);
+	localStorage.setItem("food", ele.parentNode.parentNode.parentNode.children[0].innerHTML);
+	localStorage.setItem("prot", ele.parentNode.parentNode.parentNode.children[1].innerHTML);
+	localStorage.setItem("carb", ele.parentNode.parentNode.parentNode.children[2].innerHTML);
+	localStorage.setItem("fat", ele.parentNode.parentNode.parentNode.children[3].innerHTML);
+	localStorage.setItem("sug", ele.parentNode.parentNode.parentNode.children[4].innerHTML);
+	localStorage.setItem("eng", ele.parentNode.parentNode.parentNode.children[5].innerHTML);
+}
+</script>
 </body>
 
 </html>

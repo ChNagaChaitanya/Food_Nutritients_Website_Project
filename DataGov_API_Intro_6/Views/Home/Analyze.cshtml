@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/js/Chart.min.js"></script>
-    <script src="/js/script.js"></script>
+    
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -73,18 +73,28 @@
 	<div class="row center w3-container w3-padding-64 w3-xlarge" , id="menu">
         <div class="w3-content">
 		<h1 class="w3-center w3-jumbo">Visualize the Food - Nutrient Data</h1>
-		<h3 id="demo" hidden>[@ViewBag.FoodNames]</h3>
-        <h3 id="demo1" hidden>[@ViewBag.Proteins]</h3>
-        <h3 id="demo2" hidden>[@ViewBag.Carbs]</h3>
-        <h3 id="demo3" hidden>[@ViewBag.Sugars]</h3>
+		<h3 id="demo2" hidden>[@Html.Raw(@Model[1].Labels)]</h3>
+        <h3 id="demo3" hidden>[@Model[0].Data]</h3>
+        <h3 id="demo4" hidden>[@Model[1].Data]</h3>
+        <h3 id="demo5" hidden>[@Model[2].Data]</h3>
 		<div id="myDIV">
 			<h3>Select the nutrient you want to view by clicking appropriate button:</h3>
-			<button class="button teal padding-small" onclick="changeData(0)"><i>Protein(G)</i></button>
-			<button class="button teal padding-small" onclick="changeData(1)"><i>Carbohydrate(G)</i></button>
-			<button class="button teal padding-small" onclick="changeData(2)"><i>Sugars(G)</i></button>
+			<button class="button teal padding-small" onclick="changeData1()"><i>Protein(G)</i></button>
+			<button class="button teal padding-small" onclick="changeData2()"><i>Carbohydrate(G)</i></button>
+			<button class="button teal padding-small" onclick="changeData3()"><i>Sugars(G)</i></button>
 		</div>
-		<p style="font-weight:bold;text-decoration: underline;">Top 10 fooods with maximum selected nutrient <canvas id="chart-0"></canvas></p>
+		<p style="font-weight:bold;text-decoration: underline;" id="outer">Top 10 fooods with maximum selected nutrient <canvas id="chart-0"></canvas></p>
             </div>
+
+            
+                                    
+                                        
+                                        
+         
+            
+                
+            
+        
 	</div>
 	<!-- Footer -->
 	 <div class="bottom">
@@ -93,11 +103,10 @@
                 <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/" title="USF">USF</a> | <a asp-controller="Home" asp-action="Analyze" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
             </footer>
         </div>
-        <script src="/js/script.js"></script>
+        
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
         <script>
-
-        new Chart(document.getElementById("chart-0"), {
+            new Chart(document.getElementById("chart-0"), {
         type: 'bar',
         title: {
             text: "Title in Big Fonts",
@@ -105,29 +114,42 @@
         },
         
         data: {
-            labels: [@Html.Raw(@ViewBag.FoodNames)],
+            labels: [@Html.Raw(@Model[0].Labels)],
           datasets: [
               {
                   label: "Protein(G)",
                     
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            data: [@Html.Raw(@ViewBag.Proteins)]
+            data: [@Model[0].Data]
           }
         ]
       },
         options: {
             
-            aspectRatio: 6,
+            aspectRatio: 3,
             responsive: true,
             maintainAspectRatio: true,
+            
             scales: {
-                yAxes: [{
-                    ticks: {
-                        reverse: false,
-                        stepSize: 10000
-                    },
-                }]
-            },
+		xAxes: [{
+			ticks: {
+				callback: function (food) {
+					if (/\s/.test(food)) {
+						return food.split(" ");
+					} else {
+						return food;
+					}
+				}
+			}
+		}],
+        yAxes: [{
+			stacked: true,
+			scaleLabel: {
+				display: true,
+				labelString: 'Grams'
+			}
+		}]
+	},
             plugins: {
                 legend: {
                     display: false,
@@ -143,7 +165,201 @@
         }
     //});
     });
+    
+function changeData1() {
+    document.getElementById("chart-0").remove();
+  document.getElementById("outer").innerHTML='<canvas id="chart-0"><canvas>';
+        new Chart(document.getElementById("chart-0"), {
+        type: 'bar',
+        title: {
+            text: "Title in Big Fonts",
+            fontSize: 50,
+        },
         
+        data: {
+            labels: [@Html.Raw(@Model[0].Labels)],
+          datasets: [
+              {
+                  label: "Protein(G)",
+                    
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            data: [@Model[0].Data]
+          }
+        ]
+      },
+        options: {
+            
+            aspectRatio: 3,
+            responsive: true,
+            maintainAspectRatio: true,
+            
+            scales: {
+		xAxes: [{
+			ticks: {
+				callback: function (food) {
+					if (/\s/.test(food)) {
+						return food.split(" ");
+					} else {
+						return food;
+					}
+				}
+			}
+		}],
+        yAxes: [{
+			stacked: true,
+			scaleLabel: {
+				display: true,
+				labelString: 'Grams'
+			}
+		}]
+	},
+            plugins: {
+                legend: {
+                    display: false,
+                    fontSize: 30,
+                    labels: {
+                        
+                        font: {
+                            size: 50
+                        }
+                    }
+                }
+            }//end of plugins
+        }
+    //});
+    });
+    
+       } 
+
+function changeData2() {
+    document.getElementById("chart-0").remove();
+  document.getElementById("outer").innerHTML='<canvas id="chart-0"><canvas>';
+        new Chart(document.getElementById("chart-0"), {
+        type: 'bar',
+        title: {
+            text: "Title in Big Fonts",
+            fontSize: 50,
+        },
+        
+        data: {
+            labels: [@Html.Raw(@Model[1].Labels)],
+          datasets: [
+              {
+                  label: "Carbohydrate(G)",
+                    
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            data: [@Model[1].Data]
+          }
+        ]
+      },
+        options: {
+            
+            aspectRatio: 3,
+            responsive: true,
+            maintainAspectRatio: true,
+            
+            scales: {
+		xAxes: [{
+			ticks: {
+				callback: function (food) {
+					if (/\s/.test(food)) {
+						return food.split(" ");
+					} else {
+						return food;
+					}
+				}
+			}
+		}],
+        yAxes: [{
+			stacked: true,
+			scaleLabel: {
+				display: true,
+				labelString: 'Grams'
+			}
+		}]
+	},
+            plugins: {
+                legend: {
+                    display: false,
+                    fontSize: 30,
+                    labels: {
+                        
+                        font: {
+                            size: 50
+                        }
+                    }
+                }
+            }//end of plugins
+        }
+    //});
+    });
+    
+       } 
+
+function changeData3() {
+    document.getElementById("chart-0").remove();
+  document.getElementById("outer").innerHTML='<canvas id="chart-0"><canvas>';
+        new Chart(document.getElementById("chart-0"), {
+        type: 'bar',
+        title: {
+            text: "Title in Big Fonts",
+            fontSize: 50,
+        },
+        
+        data: {
+            labels: [@Html.Raw(@Model[2].Labels)],
+          datasets: [
+              {
+                  label: "Sugar(G)",
+                    
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            data: [@Model[2].Data]
+          }
+        ]
+      },
+        options: {
+            
+            aspectRatio: 3,
+            responsive: true,
+            maintainAspectRatio: true,
+            
+            scales: {
+		xAxes: [{
+			ticks: {
+				callback: function (food) {
+					if (/\s/.test(food)) {
+						return food.split(" ");
+					} else {
+						return food;
+					}
+				}
+			}
+		}],
+        yAxes: [{
+			stacked: true,
+			scaleLabel: {
+				display: true,
+				labelString: 'Grams'
+			}
+		}]
+	},
+            plugins: {
+                legend: {
+                    display: false,
+                    fontSize: 30,
+                    labels: {
+                        
+                        font: {
+                            size: 50
+                        }
+                    }
+                }
+            }//end of plugins
+        }
+    //});
+    });
+   
+       } 
         </script>
 
 </body>

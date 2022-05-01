@@ -282,7 +282,8 @@ namespace DataGov_API_Intro_6.Controllers
                             List<Food_Nutrient> fn = new List<Food_Nutrient>();
                             for (int i = 0; i < food_nutr.Count; i++)
                             {
-                                var nutdet = res2.Find(item => item.number == food_nutr[i].number);
+                                var foodnu = i;
+                                var nutdet = res2.Find(item => item.number == food_nutr[foodnu].number);
                                 if (nutdet != null)
                                 {
                                     Nutrient nutrient = new Nutrient();
@@ -396,13 +397,17 @@ namespace DataGov_API_Intro_6.Controllers
                     {
                         dbContext.Food_Items.Remove(cr3);
                         dbContext.SaveChanges();
-                        ViewBag.Message = String.Format("Food Item Record for "+ food_name +" is Deleted");
+                        ViewBag.Message = String.Format("Record for "+ food_name +" is Deleted");
 
                     }
-
-                    return View(cr3);
+                    else
+                    {
+                        ViewBag.Message = String.Format("Error: Record for " + food_name + " does not exist");
+                    }
+                    return View();
 
                 }
+                ViewBag.Message = String.Format("Error: Record for " + food_name + " could not be Deleted");
             }
             catch (Exception e)
             {
@@ -509,10 +514,18 @@ namespace DataGov_API_Intro_6.Controllers
                         //ViewBag.NutrientAmounts = String.Join(",", finalFi.Select(d => d.foodNutrients.Select(e=>e.amount)));
 
                     }
-                    List<string> ChartLabels = new List<string>();
-                    ChartLabels.AddRange(foodnames);
+                    
                     List<float> ChartData = new List<float>();
-                    ChartData.AddRange(proteins);
+                    var prot = proteins.OrderByDescending(o => o).Select((item, index) => new { item, index }).Take(10).ToList();
+                    
+                    ChartData.AddRange(prot.Select(a=>a.item));
+                    List<string> ChartLabels = new List<string>();
+                    
+                    for (int k=0;k<prot.Count;k++)
+                    {
+                        int idx = proteins.IndexOf(prot[k].item);
+                        ChartLabels.Add(foodnames[idx]);
+                    }
                     ChartModel Model1 = new ChartModel
                     {
                         ChartType = "bar",
@@ -521,7 +534,15 @@ namespace DataGov_API_Intro_6.Controllers
                         Title = "Test chart"
                     };
                     ChartData = new List<float>();
-                    ChartData.AddRange(carbs);
+                    var carb = carbs.OrderByDescending(o => o).Select((item, index) => new { item, index }).Take(10).ToList();
+                    ChartData.AddRange(carb.Select(a => a.item));
+                    ChartLabels = new List<string>();
+
+                    for (int k = 0; k < carb.Count; k++)
+                    {
+                        int idx = carbs.IndexOf(carb[k].item);
+                        ChartLabels.Add(foodnames[idx]);
+                    }
                     ChartModel Model2 = new ChartModel
                     {
                         ChartType = "bar",
@@ -530,7 +551,15 @@ namespace DataGov_API_Intro_6.Controllers
                         Title = "Test chart"
                     };
                     ChartData = new List<float>();
-                    ChartData.AddRange(sugars);
+                    var sug = sugars.OrderByDescending(o => o).Select((item, index) => new { item, index }).Take(10).ToList();
+                    ChartData.AddRange(sug.Select(a => a.item));
+                    ChartLabels = new List<string>();
+
+                    for (int k = 0; k < sug.Count; k++)
+                    {
+                        int idx = sugars.IndexOf(sug[k].item);
+                        ChartLabels.Add(foodnames[idx]);
+                    }
                     ChartModel Model3 = new ChartModel
                     {
                         ChartType = "bar",
