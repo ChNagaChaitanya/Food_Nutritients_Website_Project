@@ -47,7 +47,7 @@
 
 <body id="myPage">
     <!-- Navbar -->
-    <<div class="top w3-xlarge">
+    <<div class="top w3-xlarge w3-blue w3-grayscale">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
             <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
@@ -143,8 +143,7 @@
                         <script type="text/javascript">
             window.onload = function () {
                 
-                text = "Food Record Already Exists.";
-                document.getElementById("demo").innerHTML = text;
+                
             };
                 </script>
 
@@ -171,15 +170,15 @@
     <script src="/js/Chart.min.js"></script>
     <script>
     function createformvalidation() {
-	alert('hi',document.getElementById("prot").value);
+	//alert(document.getElementById('prot').value);
 	var x, x1, x2, x3, x4, x5, text, text1;
 	var l = [];
 	// Get the value of the input field with id="numb"
-	x1 = document.getElementById("prot").value;
-	x2 = document.getElementById("carb").value;
-	x3 = document.getElementById("fat").value;
-	x4 = document.getElementById("sug").value;
-	x5 = document.getElementById("eng").value;
+	x1 = document.getElementById('prot').value;
+	x2 = document.getElementById('carb').value;
+	x3 = document.getElementById('fat').value;
+	x4 = document.getElementById('sug').value;
+	x5 = document.getElementById('eng').value;
 	l.push(x1);
 	l.push(x2);
 	l.push(x3);
@@ -187,9 +186,9 @@
 	l.push(x5);
 	// If x is Not a Number or less than one or greater than 10
 	for (let x in l) {
-        alert('now here',x,x1,x2,x3,x);
-		if (isNaN(x) || x < 0 || x > 1000000 || !(x1) || !(x2) || !(x3) || !(x)) {
-            alert('failed',x,x1,x2,x3,x);
+        //alert('now here',x);
+		if (isNaN(x) || x < 0 || x > 1000 || !(x)) {
+            //alert('failed',x);
 			text = "Record not Created";
 			text1 = "Please provide input for all fields and make sure the Value field is numeric";
             document.getElementById("demo").innerHTML = text;

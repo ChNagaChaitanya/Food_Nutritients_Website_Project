@@ -39,7 +39,7 @@
 </head>
 <body id="myPage">
     <!-- Navbar -->
-    <<div class="top w3-xlarge">
+    <<div class="top w3-xlarge w3-green w3-grayscale">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
             <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
@@ -175,18 +175,25 @@
             <a href="https://fdc.nal.usda.gov/" title="Source Data"> Source Data</a> | <a href="https://www.usf.edu/" title="USF">USF</a> | <a href="privacypolicy.html" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
         </footer>
     </div>
-    <script src="js/script.js"></script>
-    <script src="js/Chart.min.js"></script>
+    
     <script>
     function todeletevalue(ele) {
 	var food, prot, carb, fat, sug, eng;
-    alert(ele.parentNode.parentNode.parentNode.children[0].innerHTML);
+    
 	localStorage.setItem("food", ele.parentNode.parentNode.parentNode.children[0].innerHTML);
 	localStorage.setItem("prot", ele.parentNode.parentNode.parentNode.children[1].innerHTML);
 	localStorage.setItem("carb", ele.parentNode.parentNode.parentNode.children[2].innerHTML);
 	localStorage.setItem("fat", ele.parentNode.parentNode.parentNode.children[3].innerHTML);
 	localStorage.setItem("sug", ele.parentNode.parentNode.parentNode.children[4].innerHTML);
 	localStorage.setItem("eng", ele.parentNode.parentNode.parentNode.children[5].innerHTML);
+}function togetvalue(ele) {
+	var food, prot, carb, fat, sug, eng;
+	localStorage.setItem("food", ele.parentNode.parentNode.children[0].innerHTML);
+	localStorage.setItem("prot", ele.parentNode.parentNode.children[1].innerHTML);
+	localStorage.setItem("carb", ele.parentNode.parentNode.children[2].innerHTML);
+	localStorage.setItem("fat", ele.parentNode.parentNode.children[3].innerHTML);
+	localStorage.setItem("sug", ele.parentNode.parentNode.children[4].innerHTML);
+	localStorage.setItem("eng", ele.parentNode.parentNode.children[5].innerHTML);
 }
 </script>
 </body>

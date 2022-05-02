@@ -1613,7 +1613,11 @@ label {
     border-radius: 3px;
     width: 100%;
 }
-
+.input-disabled {
+    pointer-events: none;
+    background-color: #EFEFEF4D;
+    color: darkslategrey;
+}
 span.price {
     float: right;
     color: grey;

@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/datagov-api-intro-6dbserver/databases/DataGov_API_Intro_6_db",
+      "type": "mssql.azure",
+      "connectionId": "Data:FoodDataService:ConnectionString"
+    }
+  }
+}

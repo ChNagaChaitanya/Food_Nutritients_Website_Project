@@ -44,7 +44,7 @@
         }
     </style>
     @{
-        ViewData["Title"] = "UpdateRecords";
+        ViewData["Title"] = "UpdateRecord";
     }
     @{
         Layout = "";
@@ -53,7 +53,7 @@
 
 <body id="myPage">
     <!-- Navbar -->
-    <div class="top w3-xlarge">
+    <div class="top w3-xlarge w3-blue w3-grayscale">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
             <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>
@@ -77,16 +77,14 @@
 
         <h3>Update Record</h3>
         <hr>
-        <form method="post" class="mt-3" enctype="multipart/form-data" asp-page-handler="UpdateRecords">
+        <form asp-controller="Home" asp-action="UpdateRecords" onsubmit="return updateformvalidation()">
             <div class="row1 center">
-
-
 
                 <div class="col-25">
                     <label style="font-weight: bold">Food</label>
-                    <select class="select1" disabled>
-                        <option id="food" selected disabled>Choose..</option>
-                    </select>
+                    <input type="text" class="select1 input-disabled" size="4" for="food" name="food" id="food" />
+
+
                 </div>
                 <div class="col-25">
                     <label style="font-weight: bold">Protiens</label>
@@ -139,7 +137,18 @@
                 </div>
             </div>
         </form>
-        <h3 id="demo"></h3>
+        @if (ViewBag.Message != null)
+            {
+                <script type="text/javascript">
+            window.onload = function () {
+                
+                text = "Record Updated Successfully";
+                document.getElementById("demo").innerHTML = text;
+            };
+                </script>
+
+            }
+                    <h3 id="demo"></h3>
         <h5 id="demo1"></h5>
         <p>Click <a asp-controller="Home" asp-action="SearchRecord" style="color: blue;">Nutrient Data </a>to go back to the previous page.</p>
         <br>
@@ -157,16 +166,52 @@
                                                                                           title="USF">USF</a> | <a asp-controller="Home" asp-action="Privacy" title="Privacy Policy">Privacy Policy</a> | <a href="mailto:nutri@gmail.com" title="Contact Us">Contact Us</a>
         </footer>
     </div>
-    <script src="/js/script.js"></script>
+    
     <script src="/js/Chart.min.js"></script>
     <script>
-        document.getElementById("food").innerHTML = localStorage.getItem("food");
+        document.getElementById("food").value = localStorage.getItem("food");
 
         document.getElementById("prot").value = localStorage.getItem("prot");
         document.getElementById("carb").value = localStorage.getItem("carb");
         document.getElementById("fat").value = localStorage.getItem("fat");
         document.getElementById("sug").value = localStorage.getItem("sug");
         document.getElementById("eng").value = localStorage.getItem("eng");
+
+        function updateformvalidation() {
+	var x, x1, x2, x3, x4, x5, text, text1;
+	var l = [];
+	// Get the value of the input field with id="numb"
+	x1 = document.getElementById('prot').value;
+	x2 = document.getElementById('carb').value;
+	x3 = document.getElementById('fat').value;
+	x4 = document.getElementById('sug').value;
+	x5 = document.getElementById('eng').value;
+	l.push(x1);
+	l.push(x2);
+	l.push(x3);
+	l.push(x4);
+	l.push(x5);
+
+	// If x is Not a Number or less than one or greater than 10
+	for (let x in l) {
+		if (isNaN(x) || x < 0 || x > 1000 || !(x)) {
+			text = "Record not Updated";
+			text1 = "Please make sure the Value field is numeric";
+			document.getElementById("demo").innerHTML = text;
+	        document.getElementById("demo1").innerHTML = text1;
+            return false;
+		} else {
+			text = "Record Updated Successfully";
+			text1 = ""
+		}
+	}
+	
+    if(text == "Record Updated Successfully"){
+       
+	    document.getElementById("demo1").innerHTML = "";
+        return true;
+    }
+}
     </script>
 </body>
 </html>

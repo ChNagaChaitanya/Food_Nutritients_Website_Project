@@ -32,15 +32,18 @@
             border-radius: 2px;
         }
     </style>
-    
     @{
-        Layout = "";
-    }
+    ViewData["Title"] = "DeleteRecord";
+}
+
+@{
+    Layout = "";
+ }
 </head>
 
 <body id="myPage">
     <!-- Navbar -->
-    <div class="top w3-xlarge">
+    <div class="top w3-xlarge w3-blue w3-grayscale">
         <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off bar">
             <a class="bar-item button hide-medium hide-large right hover-white theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
             <a asp-controller="Home" asp-action="Index" class="bar-item button"><i class="fa fa-home margin-right"></i>Home</a>

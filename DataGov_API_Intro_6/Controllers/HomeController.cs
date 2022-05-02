@@ -275,7 +275,7 @@ namespace DataGov_API_Intro_6.Controllers
                         List<Food_Item> finalFi = new List<Food_Item>();
                         for (int j = 0; j < nres.Count; j++)
                         {
-
+                            List<string> nutrientlabelcheck = new List<string>();
                             var food_name = nres[j].description;
                             var food_nutr = nres[j].foodNutrients;
 
@@ -284,7 +284,7 @@ namespace DataGov_API_Intro_6.Controllers
                             {
                                 var foodnu = i;
                                 var nutdet = res2.Find(item => item.number == food_nutr[foodnu].number);
-                                if (nutdet != null)
+                                if (nutdet != null && !nutrientlabelcheck.Contains(nutdet.nutrient_type))
                                 {
                                     Nutrient nutrient = new Nutrient();
                                     nutrient.name = nutdet.nutrient_type;
@@ -328,54 +328,74 @@ namespace DataGov_API_Intro_6.Controllers
         }
 
         //UPDATE
-        public IActionResult UpdateRecords(string food_name, float prot,
+        public IActionResult UpdateRecords(string food, float prot,
                                             float carb, float fat, float sug, float eng)
         {
             try
             {
-                if (food_name != null)
+                if (food != null)
                 {
-                    var res1 = dbContext.Food_Items.Where(x => x.description == food_name).FirstOrDefault();
 
-                    if (res1 != null)
+                    //var nres = dbContext.Food_Items.Select(x=>x).ToList();
+                    //var res2 = dbContext.Food_Nutrients.Join(dbContext.Nutrients,
+                      //      a => a.number, b => b.number, (a, b) => new { b.nutrient_type, a.number, b.unitName }).Distinct()
+                        //    .ToList();
+
+                    var re = (from A in dbContext.Food_Items
+                             from B in dbContext.Food_Nutrients
+                             from C in dbContext.Nutrients
+                             
+                             where (A.fdcId == B.fdcId) &&
+                             (B.number == C.number) && (A.description.ToLower()==food.Trim().ToLower())
+                             select new { A, B, C }).ToList();
+                    if (re != null)
                     {
-
-                        float[] nutrientamt = new float[] { prot, carb, fat, sug, eng };
-                        List<Food_Nutrient> fn = new List<Food_Nutrient>();
-                        for (int i = 0; i < nutrientamt.Length; i++)
+                        foreach(var r in re) { 
+                        if(r.C.nutrient_type == "Protein")
                         {
-
-                            string temp = res1.foodNutrients[i].nutrient.nutrient_type;
-
-                            switch (temp)
-                            {
-                                case "Protein":
-                                    fn[i].amount = prot;
-                                    break;
-                                case "Carbohydrate":
-                                    fn[i].amount = carb;
-                                    break;
-                                case "Fat":
-                                    fn[i].amount = fat;
-                                    break;
-                                case "Sugar":
-                                    fn[i].amount = sug;
-                                    break;
-                                default:
-                                    fn[i].amount = eng;
-                                    break;
-                            }
-
-
+                            r.B.amount = prot;
                         }
-                        res1.foodNutrients = fn;
+                        if (r.C.nutrient_type == "Carbohydrate")
+                        {
+                            r.B.amount = carb;
+                        }
+                        if (r.C.nutrient_type == "Sugar")
+                        {
+                            r.B.amount = sug;
+                        }
+                        if (r.C.nutrient_type == "Fat")
+                        {
+                            r.B.amount = fat;
+                        }
+                        if (r.C.nutrient_type == "Energy")
+                        {
+                            r.B.amount = eng;
+                        }
                         dbContext.SaveChanges();
-                        ViewBag.Message = String.Format("Nutrient values Updated for the food item " + food_name);
+                        }
+                        ViewBag.Message = String.Format("Nutrient values Updated for the food item " + food);
+                        return View();
+                    }
+
+                    else
+                    {
+                        ViewBag.Message = String.Format("Nutrient values could not be Updated for the food item " + food);
+                    }
+                                //dbContext.Food_Items.Update(c);
+                                //dbContext.SaveChanges();
+                                
+
+                         
+
+                        
 
                     }
-                    return View(res1);
-                }
+
+                
+
+
             }
+            
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
@@ -391,23 +411,36 @@ namespace DataGov_API_Intro_6.Controllers
                 if (food_name != null)
                 {
 
-                    Food_Item cr3 = new Food_Item();
-                    cr3 = dbContext.Food_Items.Where(x => x.description == food_name).FirstOrDefault();
-                    if (cr3 != null)
-                    {
-                        dbContext.Food_Items.Remove(cr3);
-                        dbContext.SaveChanges();
-                        ViewBag.Message = String.Format("Record for "+ food_name +" is Deleted");
+                    var re = (from A in dbContext.Food_Items
+                              from B in dbContext.Food_Nutrients
+                              from C in dbContext.Nutrients
 
+                              where (A.fdcId == B.fdcId) &&
+                              (B.number == C.number) && (A.description.ToLower() == food_name.Trim().ToLower())
+                              select new { A, B, C }).ToList();
+                    if (re != null)
+                    {
+                        foreach (var r in re)
+                        {
+                            if (dbContext.Food_Items.Contains(r.A))
+                                dbContext.Food_Items.Remove(r.A);
+                            dbContext.Nutrients.Remove(r.C);
+                            dbContext.SaveChanges();
+                        }
+                        ViewBag.Message = String.Format("Record for " + food_name + " is Deleted");
                     }
+                    
+
+
+
                     else
                     {
                         ViewBag.Message = String.Format("Error: Record for " + food_name + " does not exist");
                     }
+                }
                     return View();
 
-                }
-                ViewBag.Message = String.Format("Error: Record for " + food_name + " could not be Deleted");
+                
             }
             catch (Exception e)
             {
@@ -431,7 +464,7 @@ namespace DataGov_API_Intro_6.Controllers
                 List<float> carbs = new List<float>();
                 List<float> sugars = new List<float>();
                 List<string> nutrientlabels = new List<string>();
-                List<string> nutrientlabelcheck = new List<string>();
+                
                 nutrientlabels.Add("Protein");
                 nutrientlabels.Add("Carbohydrate");
                 nutrientlabels.Add("Sugar");
@@ -441,7 +474,7 @@ namespace DataGov_API_Intro_6.Controllers
                     List<Food_Item> finalFi = new List<Food_Item>();
                     for (int j=0;j< nres.Count;j++)
                     {
-
+                        List<string> nutrientlabelcheck = new List<string>();
                         var food_name = nres[j].description;
                         var food_nutr = nres[j].foodNutrients;
                         float amt = 0;
@@ -450,7 +483,7 @@ namespace DataGov_API_Intro_6.Controllers
                         for (int i = 0; i < food_nutr.Count; i++)
                         {
                             var nutdet = res2.Find(item => item.number == food_nutr[i].number);
-                            if (nutdet != null)
+                            if (nutdet != null && !nutrientlabelcheck.Contains(nutdet.nutrient_type))
                             {
                                 Nutrient nutrient = new Nutrient();
                                 nutrient.name = nutdet.nutrient_type;
@@ -511,6 +544,7 @@ namespace DataGov_API_Intro_6.Controllers
                         ViewBag.Sugars = String.Join(",", sugars.Select(d => d));
 
                         ViewBag.FoodNames = String.Join(",", foodnames.Select(d => d));
+                        
                         //ViewBag.NutrientAmounts = String.Join(",", finalFi.Select(d => d.foodNutrients.Select(e=>e.amount)));
 
                     }
@@ -531,7 +565,7 @@ namespace DataGov_API_Intro_6.Controllers
                         ChartType = "bar",
                         Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
                         Data = String.Join(",", ChartData.Select(d => d)),
-                        Title = "Test chart"
+                        Title = "Proteins"
                     };
                     ChartData = new List<float>();
                     var carb = carbs.OrderByDescending(o => o).Select((item, index) => new { item, index }).Take(10).ToList();
@@ -548,7 +582,7 @@ namespace DataGov_API_Intro_6.Controllers
                         ChartType = "bar",
                         Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
                         Data = String.Join(",", ChartData.Select(d => d)),
-                        Title = "Test chart"
+                        Title = "Carbohydrates"
                     };
                     ChartData = new List<float>();
                     var sug = sugars.OrderByDescending(o => o).Select((item, index) => new { item, index }).Take(10).ToList();
@@ -565,7 +599,7 @@ namespace DataGov_API_Intro_6.Controllers
                         ChartType = "bar",
                         Labels = String.Join(",", ChartLabels.Select(d => "'" + d + "'")),
                         Data = String.Join(",", ChartData.Select(d => d)),
-                        Title = "Test chart"
+                        Title = "Sugars"
                     };
                     List<ChartModel> cm = new List<ChartModel>();
                     cm.Add(Model1);

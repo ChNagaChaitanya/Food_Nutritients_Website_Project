@@ -83,7 +83,8 @@
 			<button class="button teal padding-small" onclick="changeData2()"><i>Carbohydrate(G)</i></button>
 			<button class="button teal padding-small" onclick="changeData3()"><i>Sugars(G)</i></button>
 		</div>
-		<p style="font-weight:bold;text-decoration: underline;" id="outer">Top 10 fooods with maximum selected nutrient <canvas id="chart-0"></canvas></p>
+        <p style="font-weight:bold;text-decoration: underline;">Top 10 fooods with maximum selected nutrient</p>
+		<p style="font-weight:bold;text-decoration: underline;" id="outer"><canvas id="chart-0"></canvas></p>
             </div>
 
             
@@ -109,7 +110,7 @@
             new Chart(document.getElementById("chart-0"), {
         type: 'bar',
         title: {
-            text: "Title in Big Fonts",
+            text: "@Model[0].Title",
             fontSize: 50,
         },
         
@@ -172,7 +173,7 @@ function changeData1() {
         new Chart(document.getElementById("chart-0"), {
         type: 'bar',
         title: {
-            text: "Title in Big Fonts",
+            text: "@Model[0].Title",
             fontSize: 50,
         },
         
@@ -237,7 +238,7 @@ function changeData2() {
         new Chart(document.getElementById("chart-0"), {
         type: 'bar',
         title: {
-            text: "Title in Big Fonts",
+            text: "@Model[0].Title",
             fontSize: 50,
         },
         
@@ -302,7 +303,7 @@ function changeData3() {
         new Chart(document.getElementById("chart-0"), {
         type: 'bar',
         title: {
-            text: "Title in Big Fonts",
+            text: "@Model[0].Title",
             fontSize: 50,
         },
         
